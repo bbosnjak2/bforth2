@@ -1,0 +1,22 @@
+{
+  "name": "bforth2-runcpm-bridge",
+  "version": "1.0.0",
+  "private": true,
+  "description": "RunCPM web bridge and Playwright tests for bforth2",
+  "scripts": {
+    "start": "node bridge_server.js",
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:debug": "playwright test --debug"
+  },
+  "engines": {
+    "node": ">=18.18.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.61.1"
+  },
+  "dependencies": {
+    "@xterm/xterm": "^6.0.0",
+    "node-pty": "^1.1.0"
+  }
+}

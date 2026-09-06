@@ -1,0 +1,7 @@
+autosave/
+bforth2.bin
+tools/
+node_modules/
+playwright-report/
+test-results/
+.playwright/

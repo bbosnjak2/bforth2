@@ -1,0 +1,16 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "RunCPM: debug",
+      "type": "cppvsdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/RunCPMRuntime/RunCPM.exe",
+      "args": [],
+      "cwd": "${workspaceFolder}/RunCPMRuntime",
+      "environment": [],
+      "stopAtEntry": false,
+      "console": "integratedTerminal"
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "include": [
+    "*.asm"
+  ],
+  "exclude": [
+    "autosave/**",
+    "RunCPMRuntime/**",
+    "tools/**"
+  ],
+  "indentWidth": 4,
+  "labelColumnWidth": 20,
+  "opcodeColumnWidth": 8,
+  "commentColumn": 44,
+  "fullLineCommentIndent": 0,
+  "uppercaseOpcodes": true,
+  "lowercasePseudoOps": [
+    "org",
+    "equ",
+    "db",
+    "dw",
+    "dl",
+    "ds"
+  ],
+  "uppercaseKeywords": [
+    "nz",
+    "z",
+    "nc",
+    "c",
+    "po",
+    "pe",
+    "p",
+    "m"
+  ],
+  "uppercaseRegisters": [
+    "a",
+    "b",
+    "c",
+    "d",
+    "e",
+    "h",
+    "l",
+    "af",
+    "bc",
+    "de",
+    "hl",
+    "ix",
+    "iy",
+    "sp",
+    "i",
+    "r"
+  ]
+}

@@ -1,0 +1,207 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build bforth2.asm",
+      "type": "shell",
+      "command": "pwsh",
+      "args": [
+        "-NoLogo",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "./build.ps1",
+        "-Source",
+        "./bforth2.asm"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "RunCPM: build runcpm.exe",
+      "type": "shell",
+      "command": "pwsh",
+      "args": [
+        "-NoLogo",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "./build-runcpm-debug.ps1"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "RunCPM: launch",
+      "type": "shell",
+      "command": "pwsh",
+      "args": [
+        "-NoLogo",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "./RunCPMRuntime/start-runcpm.ps1"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Format ASM",
+      "type": "shell",
+      "command": "pwsh",
+      "args": [
+        "-NoLogo",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "./scripts/format-asm.ps1",
+        "-Write"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Check ASM formatting",
+      "type": "shell",
+      "command": "pwsh",
+      "args": [
+        "-NoLogo",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "./scripts/format-asm.ps1",
+        "-Check"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Install git hooks",
+      "type": "shell",
+      "command": "pwsh",
+      "args": [
+        "-NoLogo",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "./scripts/install-git-hooks.ps1"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Playwright: install chromium",
+      "type": "shell",
+      "command": "npm",
+      "args": [
+        "exec",
+        "playwright",
+        "install",
+        "chromium"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Playwright: test",
+      "type": "shell",
+      "command": "npm",
+      "args": [
+        "test"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Playwright: test ui",
+      "type": "shell",
+      "command": "npm",
+      "args": [
+        "run",
+        "test:ui"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Build bforth2 + Playwright test",
+      "dependsOrder": "sequence",
+      "dependsOn": [
+        "Build bforth2.asm",
+        "Playwright: test"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Build bforth2 + launch bridge browser",
+      "type": "shell",
+      "command": "pwsh",
+      "args": [
+        "-NoLogo",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        "& ./build.ps1 -Source ./bforth2.asm; if (-not (Get-NetTCPConnection -State Listen -LocalPort 8080 -ErrorAction SilentlyContinue)) { Start-Process -FilePath node -ArgumentList 'bridge_server.js' -WorkingDirectory $PWD.Path | Out-Null }; Start-Process 'http://127.0.0.1:8080'"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Bridge: stop",
+      "type": "shell",
+      "command": "pwsh",
+      "args": [
+        "-NoLogo",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        "$conn = Get-NetTCPConnection -State Listen -LocalPort 8080 -ErrorAction SilentlyContinue | Select-Object -First 1; if (-not $conn) { Write-Host 'No listener on port 8080.'; exit 0 }; $pid = $conn.OwningProcess; $proc = Get-CimInstance Win32_Process -Filter \"ProcessId = $pid\"; if ($proc -and (($proc.Name -ieq 'node.exe') -or ($proc.Name -ieq 'node')) -and $proc.CommandLine -like '*bridge_server.js*') { Stop-Process -Id $pid -Force; Write-Host \"Stopped bridge server PID $pid.\" } else { Write-Warning \"Port 8080 is owned by PID $pid, not bridge_server.js. No process stopped.\" }"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Bridge: restart + launch browser",
+      "dependsOrder": "sequence",
+      "dependsOn": [
+        "Bridge: stop",
+        "Build bforth2 + launch bridge browser"
+      ],
+      "problemMatcher": []
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+#!/usr/bin/env sh
+set -e
+
+if command -v pwsh >/dev/null 2>&1; then
+  if ! pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File ./scripts/format-asm.ps1 -Check; then
+    echo "ASM formatting check failed. Run: pwsh -File ./scripts/format-asm.ps1 -Write" 1>&2
+    exit 1
+  fi
+elif command -v powershell >/dev/null 2>&1; then
+  if ! powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File ./scripts/format-asm.ps1 -Check; then
+    echo "ASM formatting check failed. Run: powershell -File ./scripts/format-asm.ps1 -Write" 1>&2
+    exit 1
+  fi
+else
+  echo "PowerShell is required to run ASM formatting checks." 1>&2
+  exit 1
+fi

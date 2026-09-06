@@ -1,0 +1,20 @@
+[
+  {
+    "key": "ctrl+shift+b",
+    "command": "workbench.action.tasks.build"
+  },
+  {
+    "key": "ctrl+s",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        "workbench.action.files.save",
+        {
+          "command": "workbench.action.tasks.runTask",
+          "args": "Format ASM"
+        }
+      ]
+    },
+    "when": "editorTextFocus && (resourceExtname == .asm || resourceExtname == .ASM)"
+  }
+]
