@@ -5,6 +5,9 @@
 ;; MOD: A, DE, HL, IX
 ;; ==================================================================
 clear_command:
+    LD      DE, NOT_IMPLEMENTED_NL
+    JP      print
+
     LD      HL, (CURRENT_INPUT_POS)         ; check that no further input was specified
     LD      A, (HL)
     OR      A

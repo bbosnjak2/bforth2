@@ -5,6 +5,9 @@
 ;; MOD: A, DE, HL, IX
 ;; ==================================================================
 add_command:
+    LD      DE, NOT_IMPLEMENTED_NL
+    JP      print
+
     CALL    parse_token
 
     LD      A, B                            ; check if a word was specified

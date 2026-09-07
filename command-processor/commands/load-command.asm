@@ -6,6 +6,9 @@
 ;; MOD: A, DE, HL, IX
 ;; ==================================================================
 load_command:
+    LD      DE, NOT_IMPLEMENTED_NL
+    JP      print
+
     CALL    parse_file_name
 
     OR      A
