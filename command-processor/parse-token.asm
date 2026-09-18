@@ -1,45 +1,54 @@
 ;; ==================================================================
 ;; Extracts the token in CURRENT_INPUT, skipping leading whitespace,
-;; and copying it to the CURRENT_TOKEN, null-terminated.  The B
-;; register contains the number of characters (i.e. excludes the null
-;; terminator).
+;; and copying it to the CURRENT_TOKEN.
 ;; IN:  -
-;; OUT: B  = number of characters
-;;      HL = address of first non-token
-;;           character in CURRENT_INPUT
+;; OUT: -
 ;; MOD: A, B, DE, HL
 ;; ==================================================================
 parse_token:
+    LD      IX, CURRENT_INPUT_LEN
+    LD      IY, CURRENT_TOKEN_LEN
+
+    LD      HL, CURRENT_TOKEN
+    LD      BC, CURRENT_INPUT_MAX_LEN
+    LD      A, 0x00
+    LD      (IY), 0x00
+    CALL    fill_memory
 
     LD      HL, (CURRENT_INPUT_POS)
     LD      DE, CURRENT_TOKEN
-    LD      B, $00                          ; number of characters in the token
 
-    CALL    skip_whitespace
-
-parse_token_copy_token_loop:
-    LD      A, (HL)                         ; A contains the character
+parse_token_skip_whitespace:
+    LD      A, (IX + 1)                     ; CURRENT_INPUT_REMAINING_LEN
     OR      A
     JR      Z, parse_token_end_of_input
 
-    CALL    is_whitespace                   ; check if this is a whitespace (Z for true)
+    LD      A, (HL)
+
+    CALL    is_whitespace
+    JR      NZ, parse_token_copy_token_loop
+
+    INC     HL
+    DEC     (IX + 1)                        ; CURRENT_INPUT_REMAINING_LEN
+
+    JR      parse_token_skip_whitespace
+
+parse_token_copy_token_loop:
+    LD      (DE), A                         ; CURRENT_TOKEN
+    INC     (IY)                            ; CURRENT_TOKEN_LEN
+
+    INC     HL                              ; CURRENT_INPUT_POS
+    DEC     (IX + 1)                        ; CURRENT_INPUT_REMAINING_LEN
     JR      Z, parse_token_end_of_token
 
-parse_token_copy_character:
-    LD      (DE), A
+    INC     DE                              ; CURRENT_TOKEN
 
-    INC     B
-    INC     HL
-    INC     DE
-
-    JR      parse_token_copy_token_loop
+    LD      A, (HL)                         ; load the next character
+    CALL    is_whitespace
+    JR      NZ, parse_token_copy_token_loop
 
 parse_token_end_of_input:
 parse_token_end_of_token:
-    LD      A, $00
-    LD      (DE), A                         ; add null terminator
-
-    CALL    skip_whitespace                 ; advance the current input pos to the next non-whitespace character
     LD      (CURRENT_INPUT_POS), HL
 
 parse_token_done:

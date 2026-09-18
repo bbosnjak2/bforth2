@@ -1,13 +1,14 @@
 ;; ==================================================================
 ;; Finds the command in CURRENT_COMMAND in the command list.
-;; IN:  B  = number of characters in the command
+;; IN:  -
 ;; OUT: HL = address of command method
 ;;      Z = set if command found (NZ if not found)
-;; MOD: A, C, HL, DE, IX
+;; MOD: A, B, C, HL, DE, IX
 ;; ==========================================================
 find_command_method_address:
-
     LD      IX, COMMAND_LIST
+    LD      A, (CURRENT_TOKEN_LEN)
+    LD      B, A
 
 find_command_method_address_check_command:
     LD      A, (IX + COMMAND_KEYWORD_LEN)

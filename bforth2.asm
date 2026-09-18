@@ -62,26 +62,29 @@ main_done:
     .include "command-processor/commands/save-command.asm"
     .include "command-processor/commands/quit-command.asm"
 
-DATA_BASE                  DEFL    $
+DATA_BASE                   DEFL    $
 
-INPUT_BUFFER_SIZE          DEFB    0
-INPUT_BUFFER_COUNT         DEFB    0
-INPUT_BUFFER               DEFS    (CURRENT_INPUT_MAX_LEN + 1), 0 ; null-terminated
+INPUT_BUFFER_SIZE           DEFB    0
+INPUT_BUFFER_COUNT          DEFB    0
+INPUT_BUFFER                DEFS    (CURRENT_INPUT_MAX_LEN + 1), 0 ; null-terminated
 
-CURRENT_INPUT              DEFS    (CURRENT_INPUT_MAX_LEN + 1), 0 ; null-terminated
-CURRENT_INPUT_POS          DEFW    0
+CURRENT_INPUT               DEFS    (CURRENT_INPUT_MAX_LEN), 0
+CURRENT_INPUT_LEN           DEFB    0
+CURRENT_INPUT_REMAINING_LEN DEFB    0
+CURRENT_INPUT_POS           DEFW    0
 
-CURRENT_TOKEN              DEFS    (CURRENT_INPUT_MAX_LEN + 1), 0 ; null-terminated
+CURRENT_TOKEN_LEN           DEFB    0
+CURRENT_TOKEN               DEFS    (CURRENT_INPUT_MAX_LEN), 0
 
-PARSED_FILE_NAME           DEFS    8, 0
-PARSED_FILE_EXT            DEFS    3, 0
+PARSED_FILE_NAME            DEFS    8, 0
+PARSED_FILE_EXT             DEFS    3, 0
 
-LOAD_FILE_BUFFER           DEFS    128,0
-LOAD_FILE_BUFFER_POS       DEFW    0
+LOAD_FILE_BUFFER            DEFS    128,0
+LOAD_FILE_BUFFER_POS        DEFW    0
 
 ; this must be the last one:
-WORD_LIST_HEAD:            DEFW    WORD_LIST_END   ; points to the last word added
-WORD_LIST_NEXT:            DEFW    WORD_LIST_END + 1 ; points to where the next new word will be stored
+WORD_LIST_HEAD:             DEFW    WORD_LIST_END   ; points to the last word added
+WORD_LIST_NEXT:             DEFW    WORD_LIST_END + 1 ; points to where the next new word will be stored
 
 ; Structure:
 ;LENGTH: DEFB    3
@@ -89,8 +92,8 @@ WORD_LIST_NEXT:            DEFW    WORD_LIST_END + 1 ; points to where the next 
 ;THIS:   DEFW    WORD
 ;WORD:   DEFM    "Abc", 0
 
-WORD_LIST_CHECKPOINT_HEAD: DEFW    0x0000
-WORD_LIST_CHECKPOINT_NEXT: DEFW    0x0000
+WORD_LIST_CHECKPOINT_HEAD:  DEFW    0x0000
+WORD_LIST_CHECKPOINT_NEXT:  DEFW    0x0000
 
-WORD_LIST_END:             DEFB    0
+WORD_LIST_END:              DEFB    0
     

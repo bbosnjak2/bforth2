@@ -9,13 +9,14 @@
 ;; MOD: A, B, DE, HL
 ;; ==================================================================
 process_current_input:
-
-    LD      HL, CURRENT_INPUT
-    LD      (CURRENT_INPUT_POS), HL         ; initialize the position at the start
-
     CALL    parse_token                     ; parse command (copy to CURRENT_TOKEN, upper-case it, determine length)
 
     LD      HL, CURRENT_TOKEN
+    LD      A, (CURRENT_TOKEN_LEN)
+    OR      A
+    JR      Z, process_current_input_done
+
+    LD      B, A
     CALL    to_uppercase
 
     CALL    find_command_method_address

@@ -1,16 +1,21 @@
 ;; ===============================================================
-;; Converts a null-terminated string to uppercase in situ.
+;; Converts a string to uppercase in situ.
 ;; IN:  HL - start address
+;;      B - length
 ;; OUT: HL - original start address
+;;      B - original length
 ;; MOD:
 ;; ===============================================================
 to_uppercase:
     PUSH    HL                              ; cache the starting address
+    PUSH    BC                              ; cache the length
 
 to_uppercase_loop:
-    LD      A, (HL)
+    LD      A, B
     OR      A
     JR      Z, to_uppercase_done
+
+    LD      A, (HL)
 
 to_uppercase_process_character:
     CP      ASCII_FIRST_NON_CONTROL         ; first non-control character
@@ -27,9 +32,12 @@ to_uppercase_process_character:
 
 to_uppercase_next_character:
     INC     HL
+    DEC     B
     JR      to_uppercase_loop
 
 to_uppercase_done:
+    POP     BC                              ; restore the length
     POP     HL                              ; restore the starting address
+
     RET
     

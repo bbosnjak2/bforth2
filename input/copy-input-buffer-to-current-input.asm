@@ -1,26 +1,33 @@
 ;; ==========================================================
-;; Copies the input buffer to the current input, with null
-;; termination
+;; Copies the input buffer to the current input
 ;; IN:  -
 ;; OUT: -
 ;; MOD: A, DE, HL, BC
 ;; ==========================================================
-COPY_INPUT_TO_CURRENT_INPUT:
-    LD      HL, INPUT_BUFFER
-    LD      DE, CURRENT_INPUT
-    LD      A, (INPUT_BUFFER_COUNT)
+copy_input_to_current_input:
+    LD      HL, CURRENT_INPUT
+    LD      BC, CURRENT_INPUT_MAX_LEN
+    LD      A, 0x00
+    CALL    fill_memory
+
+    LD      IX, CURRENT_INPUT_LEN
+
+    LD      HL, INPUT_BUFFER                ; source
+    LD      DE, CURRENT_INPUT               ; destination
+    LD      (CURRENT_INPUT_POS), DE
+
+    LD      A, (INPUT_BUFFER_COUNT)         ; count
+
+    LD      B, 0x00
+    LD      C, A
+    LD      (IX), C                         ; CURRENT_INPUT_LEN
+    LD      (IX+1), C                       ; CURRENT_INPUT_REMAINING_LEN
 
     OR      A                               ; skip if nothing was input
-    JR      Z, COPY_INPUT_TO_CURRENT_INPUT_RESTORE_NULL
+    JR      Z, copy_input_to_current_input_done
 
-    LD      B, 0                            ; load BC with the number of bytes that were input
-    LD      C, A
+    LDIR                                    ; copy
 
-    LDIR
-
-COPY_INPUT_TO_CURRENT_INPUT_RESTORE_NULL:
-    LD      A, 0x00                         ; write terminating null
-    LD      (DE), A
-
+copy_input_to_current_input_done:
     RET
     

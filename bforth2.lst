@@ -1,30 +1,30 @@
               	; --------------------------------------
               	; zasm: assemble "bforth2.asm"
               	; opts: --casefold
-              	; date: 2026-09-07 10:58:58
+              	; date: 2026-09-18 15:26:07
               	; --------------------------------------
 
 
 0100:         	    org     $0100
               	
 0100:         	main_entry:
-0100: CD2907  	    CALL    clear_screen
+0100: CD2D07  	    CALL    clear_screen
               	
 0103: 112201  	    LD      DE, TEXT_GREETING_NL
-0106: CD3A07  	    CALL    print
+0106: CD3E07  	    CALL    print
 0109: 113601  	    LD      DE, HELP_PROMPT_NL
-010C: CD3A07  	    CALL    print
+010C: CD3E07  	    CALL    print
               	
 010F:         	main_prompt_input_echo_loop:
-010F: CD5B07  	    CALL    prompt
+010F: CD5F07  	    CALL    prompt
               	
-0112: CD6E07  	    CALL    load_input_buffer
+0112: CD7207  	    CALL    load_input_buffer
               	
-0115: CD8407  	    CALL    copy_input_to_current_input
+0115: CD8807  	    CALL    copy_input_to_current_input
               	
-0118: 3A790C  	    LD      A, (CURRENT_INPUT)
+0118: 3AB80C  	    LD      A, (CURRENT_INPUT)
 011B: B7      	    OR      A
-011C: C49907  	    CALL    NZ, process_current_input
+011C: C4B307  	    CALL    NZ, process_current_input
               	
 011F: 18EE    	    JR      main_prompt_input_echo_loop
               	
@@ -153,26 +153,26 @@
               	;; MOD: A, DE, HL, IX
               	;; ==================================================================
 01A9:         	parse_file_name:
-01A9: CDF507  	    CALL    parse_token
+01A9: CD1408  	    CALL    parse_token
               	
 01AC: 78      	    LD      A, B                            ; check if a word was specified
 01AD: B7      	    OR      A
 01AE: 2850    	    JR      Z, parse_file_name_syntax_error
               	
-01B0: 2ACA0C  	    LD      HL, (CURRENT_INPUT_POS)         ; check that no further input was specified
+01B0: 2A0A0D  	    LD      HL, (CURRENT_INPUT_POS)         ; check that no further input was specified
 01B3: 7E      	    LD      A, (HL)
 01B4: B7      	    OR      A
 01B5: 2049    	    JR      NZ, parse_file_name_syntax_error
               	
 01B7:         	parse_file_name_initialize:
-01B7: 211D0D  	    LD      HL, PARSED_FILE_NAME            ; initialize the results to fill with spaces
+01B7: 215D0D  	    LD      HL, PARSED_FILE_NAME            ; initialize the results to fill with spaces
 01BA: 3E20    	    LD      A, ASCII_SPACE
 01BC: 010B00  	    LD      BC, 0x000B                      ; 8 + 3
 01BF: CD8E01  	    CALL    fill_memory
               	
-01C2: 21CC0C  	    LD      HL, CURRENT_TOKEN
+01C2: 210D0D  	    LD      HL, CURRENT_TOKEN
 01C5: CDAE04  	    CALL    TO_UPPERCASE
-01C8: 111D0D  	    LD      DE, PARSED_FILE_NAME
+01C8: 115D0D  	    LD      DE, PARSED_FILE_NAME
 01CB: 0E00    	    LD      C, 0x00
               	
 01CD:         	parse_file_name_parse_filename_loop:
@@ -203,7 +203,7 @@
               	
 01E4:         	parse_file_name_parse_extension:
 01E4: 23      	    INC     HL
-01E5: 11250D  	    LD      DE, PARSED_FILE_EXT
+01E5: 11650D  	    LD      DE, PARSED_FILE_EXT
 01E8: 0E00    	    LD      C, 0x00
               	
 01EA:         	parse_file_name_parse_extension_loop:
@@ -234,7 +234,7 @@
               	
 0200:         	parse_file_name_syntax_error:
 0200: 116B01  	    LD      DE, SYNTAX_ERROR_NL
-0203: CD3A07  	    CALL    print
+0203: CD3E07  	    CALL    print
               	
 0206: 3E01    	    LD      A, 0x01                         ; error
 0208: C9      	    RET
@@ -242,7 +242,7 @@
 0209:         	parse_file_name_invalid_filename:
               	    .local
 0209: 111202  	    LD      DE, MESSAGE
-020C: CD3A07  	    CALL    PRINT
+020C: CD3E07  	    CALL    PRINT
               	
 020F: 3E01    	    LD      A, 0x01                         ; error
 0211: C9      	    RET
@@ -268,18 +268,18 @@
 022C: 3E00    	    LD      A, 0
 022E: CD8E01  	    CALL    fill_memory
               	
-0231: 211D0D  	    LD      HL, PARSED_FILE_NAME            ; set the file name
+0231: 215D0D  	    LD      HL, PARSED_FILE_NAME            ; set the file name
 0234: 11A602  	    LD      DE, load_file_FCB_NAME
 0237: 010800  	    LD      BC, 0x0008
 023A: EDB0    	    LDIR
               	
-023C: 21250D  	    LD      HL, PARSED_FILE_EXT             ; set the file extension
+023C: 21650D  	    LD      HL, PARSED_FILE_EXT             ; set the file extension
 023F: 11AE02  	    LD      DE, load_file_FCB_EXT
 0242: 010300  	    LD      BC, 0x0003
 0245: EDB0    	    LDIR
               	
 0247: 0E1A    	    LD      C, F_DMA                        ; Set the DMA buffer address
-0249: 11280D  	    LD      DE, LOAD_FILE_BUFFER
+0249: 11680D  	    LD      DE, LOAD_FILE_BUFFER
 024C: CD0500  	    CALL    BDOS
               	
 024F:         	load_file_prepare_open:
@@ -293,7 +293,7 @@
 025B:         	load_file_prepare_error:
               	    .local
 025B: 116402  	    LD      DE, MESSAGE
-025E: CD3A07  	    CALL    print
+025E: CD3E07  	    CALL    print
               	
 0261: 3E01    	    LD      A, 1
 0263: C9      	    RET
@@ -345,7 +345,7 @@
               	;; ===============================================================
 0349:         	load_file_fetch:
 0349:         	load_file_fetch_initialize:
-0349: 21280D  	    LD      HL, LOAD_FILE_BUFFER            ; reset the buffer
+0349: 21680D  	    LD      HL, LOAD_FILE_BUFFER            ; reset the buffer
 034C: 018000  	    LD      BC, 128d
 034F: 3E00    	    LD      A, 0
 0351: CD8E01  	    CALL    fill_memory
@@ -374,12 +374,12 @@
 0366: 3E00    	    LD      A, 0
 0368: CD8E01  	    CALL    fill_memory
               	
-036B: 211D0D  	    LD      HL, PARSED_FILE_NAME            ; set the file name
+036B: 215D0D  	    LD      HL, PARSED_FILE_NAME            ; set the file name
 036E: 11FE03  	    LD      DE, save_file_FCB_NAME
 0371: 010800  	    LD      BC, 0x0008
 0374: EDB0    	    LDIR
               	
-0376: 21250D  	    LD      HL, PARSED_FILE_EXT             ; set the file extension
+0376: 21650D  	    LD      HL, PARSED_FILE_EXT             ; set the file extension
 0379: 110604  	    LD      DE, save_file_FCB_EXT
 037C: 010300  	    LD      BC, 0x0003
 037F: EDB0    	    LDIR
@@ -450,7 +450,7 @@
 03E1:         	save_file_error:
               	    .local
 03E1: 11EA03  	    LD      DE, MESSAGE
-03E4: CD3A07  	    CALL    print
+03E4: CD3E07  	    CALL    print
               	
 03E7: 3E01    	    LD      A, 1
 03E9: C9      	    RET
@@ -507,42 +507,50 @@
               	    
               	    .include "util/to-uppercase.asm"
               	;; ===============================================================
-              	;; Converts a null-terminated string to uppercase in situ.
+              	;; Converts a string to uppercase in situ.
               	;; IN:  HL - start address
+              	;;      B - length
               	;; OUT: HL - original start address
+              	;;      B - original length
               	;; MOD:
               	;; ===============================================================
 04AE:         	to_uppercase:
 04AE: E5      	    PUSH    HL                              ; cache the starting address
+04AF: C5      	    PUSH    BC                              ; cache the length
               	
-04AF:         	to_uppercase_loop:
-04AF: 7E      	    LD      A, (HL)
-04B0: B7      	    OR      A
-04B1: 2812    	    JR      Z, to_uppercase_done
+04B0:         	to_uppercase_loop:
+04B0: 78      	    LD      A, B
+04B1: B7      	    OR      A
+04B2: 2814    	    JR      Z, to_uppercase_done
               	
-04B3:         	to_uppercase_process_character:
-04B3: FE20    	    CP      ASCII_FIRST_NON_CONTROL         ; first non-control character
-04B5: 380B    	    JR      C, to_uppercase_next_character
+04B4: 7E      	    LD      A, (HL)
               	
-04B7: FE61    	    CP      ASCII_A_LOWER                   ; check if less than "a"
-04B9: 3807    	    JR      C, to_uppercase_next_character
+04B5:         	to_uppercase_process_character:
+04B5: FE20    	    CP      ASCII_FIRST_NON_CONTROL         ; first non-control character
+04B7: 380B    	    JR      C, to_uppercase_next_character
               	
-04BB: FE7B    	    CP      ASCII_Z_LOWER_PLUS_ONE          ; check if greater than "z"
-04BD: 3003    	    JR      NC, to_uppercase_next_character
+04B9: FE61    	    CP      ASCII_A_LOWER                   ; check if less than "a"
+04BB: 3807    	    JR      C, to_uppercase_next_character
               	
-04BF: CBAF    	    RES     5, A                            ; uppercase the character
-04C1: 77      	    LD      (HL), A
+04BD: FE7B    	    CP      ASCII_Z_LOWER_PLUS_ONE          ; check if greater than "z"
+04BF: 3003    	    JR      NC, to_uppercase_next_character
               	
-04C2:         	to_uppercase_next_character:
-04C2: 23      	    INC     HL
-04C3: 18EA    	    JR      to_uppercase_loop
+04C1: CBAF    	    RES     5, A                            ; uppercase the character
+04C3: 77      	    LD      (HL), A
               	
-04C5:         	to_uppercase_done:
-04C5: E1      	    POP     HL                              ; restore the starting address
-04C6: C9      	    RET
+04C4:         	to_uppercase_next_character:
+04C4: 23      	    INC     HL
+04C5: 05      	    DEC     B
+04C6: 18E8    	    JR      to_uppercase_loop
+              	
+04C8:         	to_uppercase_done:
+04C8: C1      	    POP     BC                              ; restore the length
+04C9: E1      	    POP     HL                              ; restore the starting address
+              	
+04CA: C9      	    RET
               	    
               	    .include "command-processor/command-list.asm"
-04C7:         	COMMAND_LIST     DEFL    $
+04CB:         	COMMAND_LIST     DEFL    $
               	
 0000:         	COMMAND_NEXT_COMMAND = 0
 0002:         	COMMAND_KEYWORD_LEN = COMMAND_NEXT_COMMAND + 2
@@ -551,261 +559,261 @@
 0007:         	COMMAND_DESCRIPTION = COMMAND_SYNTAX + 2
 0009:         	COMMAND_METHOD_ADDRESS = COMMAND_DESCRIPTION + 2
               	
-04C7:         	HELP_COMMAND_DEF:
+04CB:         	HELP_COMMAND_DEF:
               	    .local
-04C7: F404    	                 DEFW    ADD_COMMAND_DEF                 ; next command
-04C9: 04      	                 DEFB    4                               ; keyword length
-04CA: D204    	                 DEFW    KEYWORD
-04CC: D604    	                 DEFW    SYNTAX
-04CE: DB04    	                 DEFW    DESCRIPTION
-04D0: 1908    	                 DEFW    help_command
+04CB: F804    	                 DEFW    ADD_COMMAND_DEF                 ; next command
+04CD: 04      	                 DEFB    4                               ; keyword length
+04CE: D604    	                 DEFW    KEYWORD
+04D0: DA04    	                 DEFW    SYNTAX
+04D2: DF04    	                 DEFW    DESCRIPTION
+04D4: 5808    	                 DEFW    help_command
               	
-04D2: 48454C50	KEYWORD:         DEFM    "HELP"
-04D6: 68656C70	SYNTAX:          DEFM    "help", 0
-04DA: 00      	
-04DB: 4C697374	DESCRIPTION:     DEFM    "List available commands.", 0
-04DF: 20617661	
-04E3: 696C6162	
-04E7: 6C652063	
-04EB: 6F6D6D61	
-04EF: 6E64732E	
-04F3: 00      	
+04D6: 48454C50	KEYWORD:         DEFM    "HELP"
+04DA: 68656C70	SYNTAX:          DEFM    "help", 0
+04DE: 00      	
+04DF: 4C697374	DESCRIPTION:     DEFM    "List available commands.", 0
+04E3: 20617661	
+04E7: 696C6162	
+04EB: 6C652063	
+04EF: 6F6D6D61	
+04F3: 6E64732E	
+04F7: 00      	
               	    .endlocal
               	
-04F4:         	ADD_COMMAND_DEF:
+04F8:         	ADD_COMMAND_DEF:
               	    .local
-04F4: 2B05    	                 DEFW    FIND_COMMAND_DEF                ; next command
-04F6: 03      	                 DEFB    3                               ; keyword length
-04F7: FF04    	                 DEFW    KEYWORD
-04F9: 0205    	                 DEFW    SYNTAX
-04FB: 0D05    	                 DEFW    DESCRIPTION
-04FD: 6708    	                 DEFW    add_command
+04F8: 2F05    	                 DEFW    FIND_COMMAND_DEF                ; next command
+04FA: 03      	                 DEFB    3                               ; keyword length
+04FB: 0305    	                 DEFW    KEYWORD
+04FD: 0605    	                 DEFW    SYNTAX
+04FF: 1105    	                 DEFW    DESCRIPTION
+0501: A608    	                 DEFW    add_command
               	
-04FF: 414444  	KEYWORD:         DEFM    "ADD"
-0502: 61646420	SYNTAX:          DEFM    "add <word>", 0
-0506: 3C776F72	
-050A: 643E00  	
-050D: 41646473	DESCRIPTION:     DEFM    "Adds A word to the word list.", 0
-0511: 20412077	
-0515: 6F726420	
-0519: 746F2074	
-051D: 68652077	
-0521: 6F726420	
-0525: 6C697374	
-0529: 2E00    	
+0503: 414444  	KEYWORD:         DEFM    "ADD"
+0506: 61646420	SYNTAX:          DEFM    "add <word>", 0
+050A: 3C776F72	
+050E: 643E00  	
+0511: 41646473	DESCRIPTION:     DEFM    "Adds A word to the word list.", 0
+0515: 20412077	
+0519: 6F726420	
+051D: 746F2074	
+0521: 68652077	
+0525: 6F726420	
+0529: 6C697374	
+052D: 2E00    	
               	    .endlocal
               	
-052B:         	FIND_COMMAND_DEF:
+052F:         	FIND_COMMAND_DEF:
               	    .local
-052B: 6405    	                 DEFW    REMOVE_COMMAND_DEF              ; next command
-052D: 04      	                 DEFB    4                               ; keyword length
-052E: 3605    	                 DEFW    KEYWORD
-0530: 3A05    	                 DEFW    SYNTAX
-0532: 4605    	                 DEFW    DESCRIPTION
-0534: BF08    	                 DEFW    find_command
+052F: 6805    	                 DEFW    REMOVE_COMMAND_DEF              ; next command
+0531: 04      	                 DEFB    4                               ; keyword length
+0532: 3A05    	                 DEFW    KEYWORD
+0534: 3E05    	                 DEFW    SYNTAX
+0536: 4A05    	                 DEFW    DESCRIPTION
+0538: FE08    	                 DEFW    find_command
               	
-0536: 46494E44	KEYWORD:         DEFM    "FIND"
-053A: 66696E64	SYNTAX:          DEFM    "find <word>", 0
-053E: 203C776F	
-0542: 72643E00	
-0546: 46696E64	DESCRIPTION:     DEFM    "Find A word in the word list.", 0
-054A: 20412077	
-054E: 6F726420	
-0552: 696E2074	
-0556: 68652077	
-055A: 6F726420	
-055E: 6C697374	
-0562: 2E00    	
+053A: 46494E44	KEYWORD:         DEFM    "FIND"
+053E: 66696E64	SYNTAX:          DEFM    "find <word>", 0
+0542: 203C776F	
+0546: 72643E00	
+054A: 46696E64	DESCRIPTION:     DEFM    "Find A word in the word list.", 0
+054E: 20412077	
+0552: 6F726420	
+0556: 696E2074	
+055A: 68652077	
+055E: 6F726420	
+0562: 6C697374	
+0566: 2E00    	
               	    .endlocal
               	
-0564:         	REMOVE_COMMAND_DEF:
+0568:         	REMOVE_COMMAND_DEF:
               	    .local
-0564: AB05    	                 DEFW    DUMP_COMMAND_DEF                ; next command
-0566: 06      	                 DEFB    6                               ; keyword length
-0567: 6F05    	                 DEFW    KEYWORD
-0569: 7505    	                 DEFW    SYNTAX
-056B: 7C05    	                 DEFW    DESCRIPTION
-056D: 3E09    	                 DEFW    remove_command
+0568: AF05    	                 DEFW    DUMP_COMMAND_DEF                ; next command
+056A: 06      	                 DEFB    6                               ; keyword length
+056B: 7305    	                 DEFW    KEYWORD
+056D: 7905    	                 DEFW    SYNTAX
+056F: 8005    	                 DEFW    DESCRIPTION
+0571: 7D09    	                 DEFW    remove_command
               	
-056F: 52454D4F	KEYWORD:         DEFM    "REMOVE"
-0573: 5645    	
-0575: 72656D6F	SYNTAX:          DEFM    "remove", 0
-0579: 766500  	
-057C: 52656D6F	DESCRIPTION:     DEFM    "Remove the last added word from the word list.", 0
-0580: 76652074	
-0584: 6865206C	
-0588: 61737420	
-058C: 61646465	
-0590: 6420776F	
-0594: 72642066	
-0598: 726F6D20	
-059C: 74686520	
-05A0: 776F7264	
-05A4: 206C6973	
-05A8: 742E00  	
+0573: 52454D4F	KEYWORD:         DEFM    "REMOVE"
+0577: 5645    	
+0579: 72656D6F	SYNTAX:          DEFM    "remove", 0
+057D: 766500  	
+0580: 52656D6F	DESCRIPTION:     DEFM    "Remove the last added word from the word list.", 0
+0584: 76652074	
+0588: 6865206C	
+058C: 61737420	
+0590: 61646465	
+0594: 6420776F	
+0598: 72642066	
+059C: 726F6D20	
+05A0: 74686520	
+05A4: 776F7264	
+05A8: 206C6973	
+05AC: 742E00  	
               	    .endlocal
               	
-05AB:         	DUMP_COMMAND_DEF:
+05AF:         	DUMP_COMMAND_DEF:
               	    .local
-05AB: D305    	                 DEFW    CHECKPOINT_COMMAND_DEF          ; next command
-05AD: 04      	                 DEFB    4                               ; keyword length
-05AE: B605    	                 DEFW    KEYWORD
-05B0: BA05    	                 DEFW    SYNTAX
-05B2: BF05    	                 DEFW    DESCRIPTION
-05B4: 9009    	                 DEFW    dump_command
+05AF: D705    	                 DEFW    CHECKPOINT_COMMAND_DEF          ; next command
+05B1: 04      	                 DEFB    4                               ; keyword length
+05B2: BA05    	                 DEFW    KEYWORD
+05B4: BE05    	                 DEFW    SYNTAX
+05B6: C305    	                 DEFW    DESCRIPTION
+05B8: CF09    	                 DEFW    dump_command
               	
-05B6: 44554D50	KEYWORD:         DEFM    "DUMP"
-05BA: 64756D70	SYNTAX:          DEFM    "dump", 0
-05BE: 00      	
-05BF: 44756D70	DESCRIPTION:     DEFM    "Dump the word list.", 0
-05C3: 20746865	
-05C7: 20776F72	
-05CB: 64206C69	
-05CF: 73742E00	
+05BA: 44554D50	KEYWORD:         DEFM    "DUMP"
+05BE: 64756D70	SYNTAX:          DEFM    "dump", 0
+05C2: 00      	
+05C3: 44756D70	DESCRIPTION:     DEFM    "Dump the word list.", 0
+05C7: 20746865	
+05CB: 20776F72	
+05CF: 64206C69	
+05D3: 73742E00	
               	    .endlocal
               	
-05D3:         	CHECKPOINT_COMMAND_DEF:
+05D7:         	CHECKPOINT_COMMAND_DEF:
               	    .local
-05D3: 1B06    	                 DEFW    ROLLBACK_COMMAND_DEF            ; next command
-05D5: 0A      	                 DEFB    10                              ; keyword length
-05D6: DE05    	                 DEFW    KEYWORD
-05D8: E805    	                 DEFW    SYNTAX
-05DA: F305    	                 DEFW    DESCRIPTION
-05DC: CF09    	                 DEFW    checkpoint_command
+05D7: 1F06    	                 DEFW    ROLLBACK_COMMAND_DEF            ; next command
+05D9: 0A      	                 DEFB    10                              ; keyword length
+05DA: E205    	                 DEFW    KEYWORD
+05DC: EC05    	                 DEFW    SYNTAX
+05DE: F705    	                 DEFW    DESCRIPTION
+05E0: 0E0A    	                 DEFW    checkpoint_command
               	
-05DE: 43484543	KEYWORD:         DEFM    "CHECKPOINT"
-05E2: 4B504F49	
-05E6: 4E54    	
-05E8: 63686563	SYNTAX:          DEFM    "checkpoint", 0
-05EC: 6B706F69	
-05F0: 6E7400  	
-05F3: 53746F72	DESCRIPTION:     DEFM    "Store the current word list checkpoint.", 0
-05F7: 65207468	
-05FB: 65206375	
-05FF: 7272656E	
-0603: 7420776F	
-0607: 7264206C	
-060B: 69737420	
-060F: 63686563	
-0613: 6B706F69	
-0617: 6E742E00	
+05E2: 43484543	KEYWORD:         DEFM    "CHECKPOINT"
+05E6: 4B504F49	
+05EA: 4E54    	
+05EC: 63686563	SYNTAX:          DEFM    "checkpoint", 0
+05F0: 6B706F69	
+05F4: 6E7400  	
+05F7: 53746F72	DESCRIPTION:     DEFM    "Store the current word list checkpoint.", 0
+05FB: 65207468	
+05FF: 65206375	
+0603: 7272656E	
+0607: 7420776F	
+060B: 7264206C	
+060F: 69737420	
+0613: 63686563	
+0617: 6B706F69	
+061B: 6E742E00	
               	    .endlocal
               	
-061B:         	ROLLBACK_COMMAND_DEF:
+061F:         	ROLLBACK_COMMAND_DEF:
               	    .local
-061B: 5B06    	                 DEFW    LOAD_COMMAND_DEF                ; next command
-061D: 08      	                 DEFB    8                               ; keyword length
-061E: 2606    	                 DEFW    KEYWORD
-0620: 2E06    	                 DEFW    SYNTAX
-0622: 3706    	                 DEFW    DESCRIPTION
-0624: F609    	                 DEFW    rollback_command
+061F: 5F06    	                 DEFW    LOAD_COMMAND_DEF                ; next command
+0621: 08      	                 DEFB    8                               ; keyword length
+0622: 2A06    	                 DEFW    KEYWORD
+0624: 3206    	                 DEFW    SYNTAX
+0626: 3B06    	                 DEFW    DESCRIPTION
+0628: 350A    	                 DEFW    rollback_command
               	
-0626: 524F4C4C	KEYWORD:         DEFM    "ROLLBACK"
-062A: 4241434B	
-062E: 726F6C6C	SYNTAX:          DEFM    "rollback", 0
-0632: 6261636B	
-0636: 00      	
-0637: 526F6C6C	DESCRIPTION:     DEFM    "Rollback to the current checkpoint.", 0
-063B: 6261636B	
-063F: 20746F20	
-0643: 74686520	
-0647: 63757272	
-064B: 656E7420	
-064F: 63686563	
-0653: 6B706F69	
-0657: 6E742E00	
+062A: 524F4C4C	KEYWORD:         DEFM    "ROLLBACK"
+062E: 4241434B	
+0632: 726F6C6C	SYNTAX:          DEFM    "rollback", 0
+0636: 6261636B	
+063A: 00      	
+063B: 526F6C6C	DESCRIPTION:     DEFM    "Rollback to the current checkpoint.", 0
+063F: 6261636B	
+0643: 20746F20	
+0647: 74686520	
+064B: 63757272	
+064F: 656E7420	
+0653: 63686563	
+0657: 6B706F69	
+065B: 6E742E00	
               	    .endlocal
               	
-065B:         	LOAD_COMMAND_DEF:
+065F:         	LOAD_COMMAND_DEF:
               	    .local
-065B: 9806    	                 DEFW    SAVE_COMMAND_DEF                ; next command
-065D: 04      	                 DEFB    4                               ; keyword length
-065E: 6606    	                 DEFW    KEYWORD
-0660: 6A06    	                 DEFW    SYNTAX
-0662: 7A06    	                 DEFW    DESCRIPTION
-0664: 820A    	                 DEFW    load_command
+065F: 9C06    	                 DEFW    SAVE_COMMAND_DEF                ; next command
+0661: 04      	                 DEFB    4                               ; keyword length
+0662: 6A06    	                 DEFW    KEYWORD
+0664: 6E06    	                 DEFW    SYNTAX
+0666: 7E06    	                 DEFW    DESCRIPTION
+0668: C10A    	                 DEFW    load_command
               	
-0666: 4C4F4144	KEYWORD:         DEFM    "LOAD"
-066A: 6C6F6164	SYNTAX:          DEFM    "load <filename>", 0
-066E: 203C6669	
-0672: 6C656E61	
-0676: 6D653E00	
-067A: 4C6F6164	DESCRIPTION:     DEFM    "Load A word list from A file.", 0
-067E: 20412077	
-0682: 6F726420	
-0686: 6C697374	
-068A: 2066726F	
-068E: 6D204120	
-0692: 66696C65	
-0696: 2E00    	
+066A: 4C4F4144	KEYWORD:         DEFM    "LOAD"
+066E: 6C6F6164	SYNTAX:          DEFM    "load <filename>", 0
+0672: 203C6669	
+0676: 6C656E61	
+067A: 6D653E00	
+067E: 4C6F6164	DESCRIPTION:     DEFM    "Load A word list from A file.", 0
+0682: 20412077	
+0686: 6F726420	
+068A: 6C697374	
+068E: 2066726F	
+0692: 6D204120	
+0696: 66696C65	
+069A: 2E00    	
               	    .endlocal
               	
-0698:         	SAVE_COMMAND_DEF:
+069C:         	SAVE_COMMAND_DEF:
               	    .local
-0698: D506    	                 DEFW    CLEAR_COMMAND_DEF               ; next command
-069A: 04      	                 DEFB    4                               ; keyword length
-069B: A306    	                 DEFW    KEYWORD
-069D: A706    	                 DEFW    SYNTAX
-069F: B706    	                 DEFW    DESCRIPTION
-06A1: 6C0B    	                 DEFW    save_command
+069C: D906    	                 DEFW    CLEAR_COMMAND_DEF               ; next command
+069E: 04      	                 DEFB    4                               ; keyword length
+069F: A706    	                 DEFW    KEYWORD
+06A1: AB06    	                 DEFW    SYNTAX
+06A3: BB06    	                 DEFW    DESCRIPTION
+06A5: AB0B    	                 DEFW    save_command
               	
-06A3: 53415645	KEYWORD:         DEFM    "SAVE"
-06A7: 73617665	SYNTAX:          DEFM    "save <filename>", 0
-06AB: 203C6669	
-06AF: 6C656E61	
-06B3: 6D653E00	
-06B7: 53617665	DESCRIPTION:     DEFM    "Save the word list to A file.", 0
-06BB: 20746865	
-06BF: 20776F72	
-06C3: 64206C69	
-06C7: 73742074	
-06CB: 6F204120	
-06CF: 66696C65	
-06D3: 2E00    	
+06A7: 53415645	KEYWORD:         DEFM    "SAVE"
+06AB: 73617665	SYNTAX:          DEFM    "save <filename>", 0
+06AF: 203C6669	
+06B3: 6C656E61	
+06B7: 6D653E00	
+06BB: 53617665	DESCRIPTION:     DEFM    "Save the word list to A file.", 0
+06BF: 20746865	
+06C3: 20776F72	
+06C7: 64206C69	
+06CB: 73742074	
+06CF: 6F204120	
+06D3: 66696C65	
+06D7: 2E00    	
               	    .endlocal
               	
-06D5:         	CLEAR_COMMAND_DEF:
+06D9:         	CLEAR_COMMAND_DEF:
               	    .local
-06D5: 0007    	                 DEFW    QUIT_COMMAND_DEF                ; next command
-06D7: 05      	                 DEFB    5                               ; keyword length
-06D8: E006    	                 DEFW    KEYWORD
-06DA: E506    	                 DEFW    SYNTAX
-06DC: EB06    	                 DEFW    DESCRIPTION
-06DE: 4F0A    	                 DEFW    clear_command
+06D9: 0407    	                 DEFW    QUIT_COMMAND_DEF                ; next command
+06DB: 05      	                 DEFB    5                               ; keyword length
+06DC: E406    	                 DEFW    KEYWORD
+06DE: E906    	                 DEFW    SYNTAX
+06E0: EF06    	                 DEFW    DESCRIPTION
+06E2: 8E0A    	                 DEFW    clear_command
               	
-06E0: 434C4541	KEYWORD:         DEFM    "CLEAR"
-06E4: 52      	
-06E5: 636C6561	SYNTAX:          DEFM    "clear", 0
-06E9: 7200    	
-06EB: 436C6561	DESCRIPTION:     DEFM    "Clear the word list.", 0
-06EF: 72207468	
-06F3: 6520776F	
-06F7: 7264206C	
-06FB: 6973742E	
-06FF: 00      	
+06E4: 434C4541	KEYWORD:         DEFM    "CLEAR"
+06E8: 52      	
+06E9: 636C6561	SYNTAX:          DEFM    "clear", 0
+06ED: 7200    	
+06EF: 436C6561	DESCRIPTION:     DEFM    "Clear the word list.", 0
+06F3: 72207468	
+06F7: 6520776F	
+06FB: 7264206C	
+06FF: 6973742E	
+0703: 00      	
               	    .endlocal
               	
-0700:         	QUIT_COMMAND_DEF:
+0704:         	QUIT_COMMAND_DEF:
               	    .local
-0700: 2607    	                 DEFW    COMMAND_LIST_END                ; next command
-0702: 04      	                 DEFB    4                               ; keyword length
-0703: 0B07    	                 DEFW    KEYWORD
-0705: 0F07    	                 DEFW    SYNTAX
-0707: 1407    	                 DEFW    DESCRIPTION
-0709: 140C    	                 DEFW    quit_command                    ; method address
+0704: 2A07    	                 DEFW    COMMAND_LIST_END                ; next command
+0706: 04      	                 DEFB    4                               ; keyword length
+0707: 0F07    	                 DEFW    KEYWORD
+0709: 1307    	                 DEFW    SYNTAX
+070B: 1807    	                 DEFW    DESCRIPTION
+070D: 530C    	                 DEFW    quit_command                    ; method address
               	
-070B: 51554954	KEYWORD:         DEFM    "QUIT"
-070F: 71756974	SYNTAX:          DEFM    "quit", 0
-0713: 00      	
-0714: 45786974	DESCRIPTION:     DEFM    "Exit the program.", 0
-0718: 20746865	
-071C: 2070726F	
-0720: 6772616D	
-0724: 2E00    	
+070F: 51554954	KEYWORD:         DEFM    "QUIT"
+0713: 71756974	SYNTAX:          DEFM    "quit", 0
+0717: 00      	
+0718: 45786974	DESCRIPTION:     DEFM    "Exit the program.", 0
+071C: 20746865	
+0720: 2070726F	
+0724: 6772616D	
+0728: 2E00    	
               	    .endlocal
               	
-0726: 0000    	COMMAND_LIST_END DEFW    0
-0728: 00      	                 DEFB    0
+072A: 0000    	COMMAND_LIST_END DEFW    0
+072C: 00      	                 DEFB    0
               	
               	;    { "add", "add <word>", "Add a word to the word list.", addCommand },
               	;    { "find", "find <word>", "Find a word in the word list.", findCommand },
@@ -825,19 +833,19 @@
               	;; OUT: -
               	;; MOD: C, E
               	;; ==========================================================
-0729:         	clear_screen
-0729: 113207  	    LD      DE, CLEAR_SCREEN_SEQ
-072C: 0E09    	    LD      C, $09
-072E: CD0500  	    CALL    $0005
+072D:         	clear_screen
+072D: 113607  	    LD      DE, CLEAR_SCREEN_SEQ
+0730: 0E09    	    LD      C, $09
+0732: CD0500  	    CALL    $0005
               	
-0731: C9      	    RET
+0735: C9      	    RET
               	
-0732:         	CLEAR_SCREEN_SEQ    DEFL    $
-0732: 1B      	    .byte   27
-0733: 5B324A  	    .ascii  "[2J"
+0736:         	CLEAR_SCREEN_SEQ    DEFL    $
 0736: 1B      	    .byte   27
-0737: 5B48    	    .ascii  "[H"
-0739: 24      	    .ascii  "$"
+0737: 5B324A  	    .ascii  "[2J"
+073A: 1B      	    .byte   27
+073B: 5B48    	    .ascii  "[H"
+073D: 24      	    .ascii  "$"
               	    
               	    .include "output/print.cpm.asm"
               	;; ==========================================================
@@ -847,33 +855,33 @@
               	;; OUT: -
               	;; MOD: C, A, HL, DE
               	;; ==========================================================
-073A:         	print:
-073A: 1A      	    LD      A, (DE)
-073B: B7      	    OR      A
-073C: C8      	    RET     Z                               ; nothing to print
+073E:         	print:
+073E: 1A      	    LD      A, (DE)
+073F: B7      	    OR      A
+0740: C8      	    RET     Z                               ; nothing to print
               	
-073D: 3E00    	    LD      A, $00                          ; null terminator
-073F: 62      	    LD      H, D                            ; copy the start address in HL
-0740: 6B      	    LD      L, E
+0741: 3E00    	    LD      A, $00                          ; null terminator
+0743: 62      	    LD      H, D                            ; copy the start address in HL
+0744: 6B      	    LD      L, E
               	
-0741:         	print_find_null_terminator_loop:
-0741: EDA1    	    CPI                                     ; compare (HL) to a null terminator
-0743: 20FC    	    JR      NZ, print_find_null_terminator_loop
+0745:         	print_find_null_terminator_loop:
+0745: EDA1    	    CPI                                     ; compare (HL) to a null terminator
+0747: 20FC    	    JR      NZ, print_find_null_terminator_loop
               	
-0745: 2B      	    DEC     HL                              ; replace the null with the CPM terminator
-0746: 3E24    	    LD      A, '$'
-0748: 77      	    LD      (HL), A
+0749: 2B      	    DEC     HL                              ; replace the null with the CPM terminator
+074A: 3E24    	    LD      A, '$'
+074C: 77      	    LD      (HL), A
               	
-0749: E5      	    PUSH    HL                              ; cache the address of the end of the string
+074D: E5      	    PUSH    HL                              ; cache the address of the end of the string
               	
-074A: 0E09    	    LD      C, $09                          ; invoke the CPM print method
-074C: CD0500  	    CALL    $0005
+074E: 0E09    	    LD      C, $09                          ; invoke the CPM print method
+0750: CD0500  	    CALL    $0005
               	
-074F: E1      	    POP     HL                              ; restore HL and put the null terminator back
-0750: 3E00    	    LD      A, $00
-0752: 77      	    LD      (HL), A
+0753: E1      	    POP     HL                              ; restore HL and put the null terminator back
+0754: 3E00    	    LD      A, $00
+0756: 77      	    LD      (HL), A
               	
-0753: C9      	    RET
+0757: C9      	    RET
               	    
               	    .include "output/print-char.cpm.asm"
               	;; ==========================================================
@@ -883,12 +891,12 @@
               	;; OUT: -
               	;; MOD: C, E
               	;; ==========================================================
-0754:         	print_char:
-0754: 5F      	    LD      E, A
-0755: 0E02    	    LD      C, F_CONSOLE_OUT
-0757: CD0500  	    CALL    BDOS
+0758:         	print_char:
+0758: 5F      	    LD      E, A
+0759: 0E02    	    LD      C, F_CONSOLE_OUT
+075B: CD0500  	    CALL    BDOS
               	
-075A: C9      	    RET
+075E: C9      	    RET
               	    
               	    .include "output/prompt.cpm.asm"
               	;; ==========================================================
@@ -897,11 +905,11 @@
               	;; OUT: -
               	;; MOD: DE
               	;; ==========================================================
-075B:         	prompt
-075B: 115B01  	    LD      DE, INPUT_PROMPT_SP
-075E: CD3A07  	    CALL    print
+075F:         	prompt
+075F: 115B01  	    LD      DE, INPUT_PROMPT_SP
+0762: CD3E07  	    CALL    print
               	
-0761: C9      	    RET
+0765: C9      	    RET
               	    
               	
               	    .include "input/clear-input-buffer.cpm.asm"
@@ -911,14 +919,14 @@
               	;; OUT: -
               	;; MOD: A, DE, HL, BC
               	;; ==========================================================
-0762:         	clear_input_buffer
-0762: 21280C  	    LD      HL, INPUT_BUFFER
-0765: 015000  	    LD      BC, INPUT_BUFFER_MAX_LEN
-0768: 3E00    	    LD      A, 0x00
+0766:         	clear_input_buffer
+0766: 21670C  	    LD      HL, INPUT_BUFFER
+0769: 015000  	    LD      BC, INPUT_BUFFER_MAX_LEN
+076C: 3E00    	    LD      A, 0x00
               	
-076A: CD8E01  	    CALL    fill_memory
+076E: CD8E01  	    CALL    fill_memory
               	
-076D: C9      	    RET
+0771: C9      	    RET
               	    
               	    .include "input/load-input-buffer.cpm.asm"
               	;; ==========================================================
@@ -934,50 +942,57 @@
               	;; assembler rejects them as invalid. As a result, the input
               	;; character has to be shuffled to/from B.
               	;; ==========================================================
-076E:         	load_input_buffer
-076E: CD6207  	    CALL    clear_input_buffer
+0772:         	load_input_buffer
+0772: CD6607  	    CALL    clear_input_buffer
               	
-0771: 11260C  	    LD      DE, INPUT_BUFFER_SIZE
-0774: 3E50    	    LD      A, INPUT_BUFFER_MAX_LEN
-0776: 12      	    LD      (DE), A
+0775: 11650C  	    LD      DE, INPUT_BUFFER_SIZE
+0778: 3E50    	    LD      A, INPUT_BUFFER_MAX_LEN
+077A: 12      	    LD      (DE), A
               	
-0777: 0E0A    	    LD      C, $0A
-0779: CD0500  	    CALL    $0005
+077B: 0E0A    	    LD      C, $0A
+077D: CD0500  	    CALL    $0005
               	
               	; echo a LF since BDOS doesn't
-077C: 1E0A    	    LD      E, ASCII_LF
-077E: 0E02    	    LD      C, $02
-0780: CD0500  	    CALL    $0005
+0780: 1E0A    	    LD      E, ASCII_LF
+0782: 0E02    	    LD      C, $02
+0784: CD0500  	    CALL    $0005
               	
-0783: C9      	    RET
+0787: C9      	    RET
               	    
               	
               	    .include "input/copy-input-buffer-to-current-input.asm"
               	;; ==========================================================
-              	;; Copies the input buffer to the current input, with null
-              	;; termination
+              	;; Copies the input buffer to the current input
               	;; IN:  -
               	;; OUT: -
               	;; MOD: A, DE, HL, BC
               	;; ==========================================================
-0784:         	COPY_INPUT_TO_CURRENT_INPUT:
-0784: 21280C  	    LD      HL, INPUT_BUFFER
-0787: 11790C  	    LD      DE, CURRENT_INPUT
-078A: 3A270C  	    LD      A, (INPUT_BUFFER_COUNT)
+0788:         	copy_input_to_current_input:
+0788: 21B80C  	    LD      HL, CURRENT_INPUT
+078B: 015000  	    LD      BC, CURRENT_INPUT_MAX_LEN
+078E: 3E00    	    LD      A, 0x00
+0790: CD8E01  	    CALL    fill_memory
               	
-078D: B7      	    OR      A                               ; skip if nothing was input
-078E: 2805    	    JR      Z, COPY_INPUT_TO_CURRENT_INPUT_RESTORE_NULL
+0793: DD21080D	    LD      IX, CURRENT_INPUT_LEN
               	
-0790: 0600    	    LD      B, 0                            ; load BC with the number of bytes that were input
-0792: 4F      	    LD      C, A
+0797: 21670C  	    LD      HL, INPUT_BUFFER                ; source
+079A: 11B80C  	    LD      DE, CURRENT_INPUT               ; destination
+079D: ED530A0D	    LD      (CURRENT_INPUT_POS), DE
               	
-0793: EDB0    	    LDIR
+07A1: 3A660C  	    LD      A, (INPUT_BUFFER_COUNT)         ; count
               	
-0795:         	COPY_INPUT_TO_CURRENT_INPUT_RESTORE_NULL:
-0795: 3E00    	    LD      A, 0x00                         ; write terminating null
-0797: 12      	    LD      (DE), A
+07A4: 0600    	    LD      B, 0x00
+07A6: 4F      	    LD      C, A
+07A7: DD7100  	    LD      (IX), C                         ; CURRENT_INPUT_LEN
+07AA: DD7101  	    LD      (IX+1), C                       ; CURRENT_INPUT_REMAINING_LEN
               	
-0798: C9      	    RET
+07AD: B7      	    OR      A                               ; skip if nothing was input
+07AE: 2802    	    JR      Z, copy_input_to_current_input_done
+              	
+07B0: EDB0    	    LDIR                                    ; copy
+              	
+07B2:         	copy_input_to_current_input_done:
+07B2: C9      	    RET
               	    
               	
               	    .include "command-processor/process-current-input.asm"
@@ -991,139 +1006,150 @@
               	;;           character in CURRENT_INPUT
               	;; MOD: A, B, DE, HL
               	;; ==================================================================
-0799:         	process_current_input:
+07B3:         	process_current_input:
+07B3: CD1408  	    CALL    parse_token                     ; parse command (copy to CURRENT_TOKEN, upper-case it, determine length)
               	
-0799: 21790C  	    LD      HL, CURRENT_INPUT
-079C: 22CA0C  	    LD      (CURRENT_INPUT_POS), HL         ; initialize the position at the start
+07B6: 210D0D  	    LD      HL, CURRENT_TOKEN
+07B9: 3A0C0D  	    LD      A, (CURRENT_TOKEN_LEN)
+07BC: B7      	    OR      A
+07BD: 2817    	    JR      Z, process_current_input_done
               	
-079F: CDF507  	    CALL    parse_token                     ; parse command (copy to CURRENT_TOKEN, upper-case it, determine length)
+07BF: 47      	    LD      B, A
+07C0: CDAE04  	    CALL    to_uppercase
               	
-07A2: 21CC0C  	    LD      HL, CURRENT_TOKEN
-07A5: CDAE04  	    CALL    to_uppercase
+07C3: CDD707  	    CALL    find_command_method_address
               	
-07A8: CDBC07  	    CALL    find_command_method_address
+07C6: 280D    	    JR      Z, process_current_input_command_recognized
               	
-07AB: 280D    	    JR      Z, process_current_input_command_recognized
+07C8:         	process_current_input_command_not_recognized:
+07C8: 110D0D  	    LD      DE, CURRENT_TOKEN
+07CB: CD3E07  	    CALL    print
+07CE: 116201  	    LD      DE, INPUT_NOT_RECOGNIZED_NL
+07D1: CD3E07  	    CALL    print
+07D4: C9      	    RET
               	
-07AD:         	process_current_input_command_not_recognized:
-07AD: 11CC0C  	    LD      DE, CURRENT_TOKEN
-07B0: CD3A07  	    CALL    print
-07B3: 116201  	    LD      DE, INPUT_NOT_RECOGNIZED_NL
-07B6: CD3A07  	    CALL    print
-07B9: C9      	    RET
-              	
-07BA:         	process_current_input_command_recognized:
+07D5:         	process_current_input_command_recognized:
               	; execute command if found (JP (HL), target will RET)
-07BA: E9      	    JP      HL
+07D5: E9      	    JP      HL
               	
-07BB:         	process_current_input_done:
-07BB: C9      	    RET
+07D6:         	process_current_input_done:
+07D6: C9      	    RET
               	
               	    .include "find-command-method-address.asm"
               	;; ==================================================================
               	;; Finds the command in CURRENT_COMMAND in the command list.
-              	;; IN:  B  = number of characters in the command
+              	;; IN:  -
               	;; OUT: HL = address of command method
               	;;      Z = set if command found (NZ if not found)
-              	;; MOD: A, C, HL, DE, IX
+              	;; MOD: A, B, C, HL, DE, IX
               	;; ==========================================================
-07BC:         	find_command_method_address:
+07D7:         	find_command_method_address:
+07D7: DD21CB04	    LD      IX, COMMAND_LIST
+07DB: 3A0C0D  	    LD      A, (CURRENT_TOKEN_LEN)
+07DE: 47      	    LD      B, A
               	
-07BC: DD21C704	    LD      IX, COMMAND_LIST
+07DF:         	find_command_method_address_check_command:
+07DF: DD7E02  	    LD      A, (IX + COMMAND_KEYWORD_LEN)
+07E2: B7      	    OR      A                               ; if 0, then end of list reached
+07E3: 282B    	    JR      Z, find_command_method_address_not_found
               	
-07C0:         	find_command_method_address_check_command:
-07C0: DD7E02  	    LD      A, (IX + COMMAND_KEYWORD_LEN)
-07C3: B7      	    OR      A                               ; if 0, then end of list reached
-07C4: 282B    	    JR      Z, find_command_method_address_not_found
+07E5: B8      	    CP      B                               ; if the length differs, move to the next command
+07E6: 200E    	    JR      NZ, find_command_method_address_next_command
               	
-07C6: B8      	    CP      B                               ; if the length differs, move to the next command
-07C7: 200E    	    JR      NZ, find_command_method_address_next_command
+07E8:         	find_command_method_address_compare:
+07E8: DD6E03  	    LD      HL, (IX + COMMAND_KEYWORD)
+07EB: DD6604  	
+07EE: 110D0D  	    LD      DE, CURRENT_TOKEN
+07F1: 48      	    LD      C, B                            ; number of characters
               	
-07C9:         	find_command_method_address_compare:
-07C9: DD6E03  	    LD      HL, (IX + COMMAND_KEYWORD)
-07CC: DD6604  	
-07CF: 11CC0C  	    LD      DE, CURRENT_TOKEN
-07D2: 48      	    LD      C, B                            ; number of characters
+07F2:         	find_command_method_address_compare_loop:
+07F2: 1A      	    LD      A, (DE)
+07F3: BE      	    CP      (HL)
+07F4: 280B    	    JR      Z, find_command_method_address_compare_next_character
               	
-07D3:         	find_command_method_address_compare_loop:
-07D3: 1A      	    LD      A, (DE)
-07D4: BE      	    CP      (HL)
-07D5: 280B    	    JR      Z, find_command_method_address_compare_next_character
+07F6:         	find_command_method_address_next_command:
+07F6: DD6E00  	    LD      HL, (IX + COMMAND_NEXT_COMMAND)
+07F9: DD6601  	
+07FC: E5      	    PUSH    HL
+07FD: DDE1    	    POP     IX
+07FF: 18DE    	    JR      find_command_method_address_check_command
               	
-07D7:         	find_command_method_address_next_command:
-07D7: DD6E00  	    LD      HL, (IX + COMMAND_NEXT_COMMAND)
-07DA: DD6601  	
-07DD: E5      	    PUSH    HL
-07DE: DDE1    	    POP     IX
-07E0: 18DE    	    JR      find_command_method_address_check_command
+0801:         	find_command_method_address_compare_next_character:
+0801: 23      	    INC     HL
+0802: 13      	    INC     DE
+0803: 0D      	    DEC     C                               ; move to next character
+0804: 20EC    	    JR      NZ, find_command_method_address_compare_loop
               	
-07E2:         	find_command_method_address_compare_next_character:
-07E2: 23      	    INC     HL
-07E3: 13      	    INC     DE
-07E4: 0D      	    DEC     C                               ; move to next character
-07E5: 20EC    	    JR      NZ, find_command_method_address_compare_loop
+0806:         	find_command_method_address_found:          ; all characters have matched
+0806: DD6E09  	    LD      HL, (IX + COMMAND_METHOD_ADDRESS)
+0809: DD660A  	
+080C: 3E00    	    LD      A, $00
+080E: B7      	    OR      A                               ; clears the Z flag
+080F: C9      	    RET
               	
-07E7:         	find_command_method_address_found:          ; all characters have matched
-07E7: DD6E09  	    LD      HL, (IX + COMMAND_METHOD_ADDRESS)
-07EA: DD660A  	
-07ED: 3E00    	    LD      A, $00
-07EF: B7      	    OR      A                               ; clears the Z flag
-07F0: C9      	    RET
+0810:         	find_command_method_address_not_found:
+0810: 3E01    	    LD      A, $01
+0812: B7      	    OR      A                               ; sets the Z flag
               	
-07F1:         	find_command_method_address_not_found:
-07F1: 3E01    	    LD      A, $01
-07F3: B7      	    OR      A                               ; sets the Z flag
-              	
-07F4: C9      	    RET
+0813: C9      	    RET
               	    
               	    
               	    .include "command-processor/parse-token.asm"
               	;; ==================================================================
               	;; Extracts the token in CURRENT_INPUT, skipping leading whitespace,
-              	;; and copying it to the CURRENT_TOKEN, null-terminated.  The B
-              	;; register contains the number of characters (i.e. excludes the null
-              	;; terminator).
+              	;; and copying it to the CURRENT_TOKEN.
               	;; IN:  -
-              	;; OUT: B  = number of characters
-              	;;      HL = address of first non-token
-              	;;           character in CURRENT_INPUT
+              	;; OUT: -
               	;; MOD: A, B, DE, HL
               	;; ==================================================================
-07F5:         	parse_token:
+0814:         	parse_token:
+0814: DD21080D	    LD      IX, CURRENT_INPUT_LEN
+0818: FD210C0D	    LD      IY, CURRENT_TOKEN_LEN
               	
-07F5: 2ACA0C  	    LD      HL, (CURRENT_INPUT_POS)
-07F8: 11CC0C  	    LD      DE, CURRENT_TOKEN
-07FB: 0600    	    LD      B, $00                          ; number of characters in the token
+081C: 210D0D  	    LD      HL, CURRENT_TOKEN
+081F: 015000  	    LD      BC, CURRENT_INPUT_MAX_LEN
+0822: 3E00    	    LD      A, 0x00
+0824: FD360000	    LD      (IY), 0x00
+0828: CD8E01  	    CALL    fill_memory
               	
-07FD: CDA104  	    CALL    skip_whitespace
+082B: 2A0A0D  	    LD      HL, (CURRENT_INPUT_POS)
+082E: 110D0D  	    LD      DE, CURRENT_TOKEN
               	
-0800:         	parse_token_copy_token_loop:
-0800: 7E      	    LD      A, (HL)                         ; A contains the character
-0801: B7      	    OR      A
-0802: 280B    	    JR      Z, parse_token_end_of_input
+0831:         	parse_token_skip_whitespace:
+0831: DD7E01  	    LD      A, (IX + 1)                     ; CURRENT_INPUT_REMAINING_LEN
+0834: B7      	    OR      A
+0835: 281D    	    JR      Z, parse_token_end_of_input
               	
-0804: CD9601  	    CALL    is_whitespace                   ; check if this is a whitespace (Z for true)
-0807: 2806    	    JR      Z, parse_token_end_of_token
+0837: 7E      	    LD      A, (HL)
               	
-0809:         	parse_token_copy_character:
-0809: 12      	    LD      (DE), A
+0838: CD9601  	    CALL    is_whitespace
+083B: 2006    	    JR      NZ, parse_token_copy_token_loop
               	
-080A: 04      	    INC     B
-080B: 23      	    INC     HL
-080C: 13      	    INC     DE
+083D: 23      	    INC     HL
+083E: DD3501  	    DEC     (IX + 1)                        ; CURRENT_INPUT_REMAINING_LEN
               	
-080D: 18F1    	    JR      parse_token_copy_token_loop
+0841: 18EE    	    JR      parse_token_skip_whitespace
               	
-080F:         	parse_token_end_of_input:
-080F:         	parse_token_end_of_token:
-080F: 3E00    	    LD      A, $00
-0811: 12      	    LD      (DE), A                         ; add null terminator
+0843:         	parse_token_copy_token_loop:
+0843: 12      	    LD      (DE), A                         ; CURRENT_TOKEN
+0844: FD3400  	    INC     (IY)                            ; CURRENT_TOKEN_LEN
               	
-0812: CDA104  	    CALL    skip_whitespace                 ; advance the current input pos to the next non-whitespace character
-0815: 22CA0C  	    LD      (CURRENT_INPUT_POS), HL
+0847: 23      	    INC     HL                              ; CURRENT_INPUT_POS
+0848: DD3501  	    DEC     (IX + 1)                        ; CURRENT_INPUT_REMAINING_LEN
+084B: 2807    	    JR      Z, parse_token_end_of_token
               	
-0818:         	parse_token_done:
-0818: C9      	    RET
+084D: 13      	    INC     DE                              ; CURRENT_TOKEN
+              	
+084E: 7E      	    LD      A, (HL)                         ; load the next character
+084F: CD9601  	    CALL    is_whitespace
+0852: 20EF    	    JR      NZ, parse_token_copy_token_loop
+              	
+0854:         	parse_token_end_of_input:
+0854:         	parse_token_end_of_token:
+0854: 220A0D  	    LD      (CURRENT_INPUT_POS), HL
+              	
+0857:         	parse_token_done:
+0857: C9      	    RET
               	    
               	    .include "command-processor/commands/help-command.asm"
               	;; ==================================================================
@@ -1132,55 +1158,55 @@
               	;; OUT: -
               	;; MOD: A, DE, HL, IX
               	;; ==================================================================
-0819:         	help_command:
-0819: 117B01  	    LD      DE, NOT_IMPLEMENTED_NL
-081C: C33A07  	    JP      print
+0858:         	help_command:
+0858: 117B01  	    LD      DE, NOT_IMPLEMENTED_NL
+085B: C33E07  	    JP      print
               	
-081F: 2ACA0C  	    LD      HL, (CURRENT_INPUT_POS)         ; check that no further input was specified
-0822: 7E      	    LD      A, (HL)
-0823: B7      	    OR      A
-0824: 2807    	    JR      Z, help_command_execute
+085E: 2A0A0D  	    LD      HL, (CURRENT_INPUT_POS)         ; check that no further input was specified
+0861: 7E      	    LD      A, (HL)
+0862: B7      	    OR      A
+0863: 2807    	    JR      Z, help_command_execute
               	
-0826:         	help_command_syntax_error:
-0826: 116B01  	    LD      DE, SYNTAX_ERROR_NL
-0829: CD3A07  	    CALL    print
+0865:         	help_command_syntax_error:
+0865: 116B01  	    LD      DE, SYNTAX_ERROR_NL
+0868: CD3E07  	    CALL    print
               	
-082C: C9      	    RET
+086B: C9      	    RET
               	
-082D:         	help_command_execute:
-082D: DD21C704	    LD      IX, COMMAND_LIST
+086C:         	help_command_execute:
+086C: DD21CB04	    LD      IX, COMMAND_LIST
               	
-0831:         	help_command_loop:
-0831: DD7E02  	    LD      A, (IX + COMMAND_KEYWORD_LEN)
-0834: B7      	    OR      A                               ; if 0, then end of list reached
-0835: 2829    	    JR      Z, help_command_done
+0870:         	help_command_loop:
+0870: DD7E02  	    LD      A, (IX + COMMAND_KEYWORD_LEN)
+0873: B7      	    OR      A                               ; if 0, then end of list reached
+0874: 2829    	    JR      Z, help_command_done
               	
-0837: DD5E05  	    LD      DE, (IX + COMMAND_SYNTAX)
-083A: DD5606  	
-083D: CD3A07  	    CALL    print
+0876: DD5E05  	    LD      DE, (IX + COMMAND_SYNTAX)
+0879: DD5606  	
+087C: CD3E07  	    CALL    print
               	
-0840: 116701  	    LD      DE, HELP_SYNTAX_DESCRIPTION_DELIMITER
-0843: CD3A07  	    CALL    print
+087F: 116701  	    LD      DE, HELP_SYNTAX_DESCRIPTION_DELIMITER
+0882: CD3E07  	    CALL    print
               	
-0846: DD5E07  	    LD      DE, (IX + COMMAND_DESCRIPTION)
-0849: DD5608  	
-084C: CD3A07  	    CALL    print
+0885: DD5E07  	    LD      DE, (IX + COMMAND_DESCRIPTION)
+0888: DD5608  	
+088B: CD3E07  	    CALL    print
               	
-084F: 116501  	    LD      DE, NEW_LINE
-0852: CD3A07  	    CALL    print
+088E: 116501  	    LD      DE, NEW_LINE
+0891: CD3E07  	    CALL    print
               	
-0855:         	help_command_next_command:
-0855: DD6E00  	    LD      HL, (IX + COMMAND_NEXT_COMMAND)
-0858: DD6601  	
-085B: E5      	    PUSH    HL
-085C: DDE1    	    POP     IX
-085E: 18D1    	    JR      help_command_loop
+0894:         	help_command_next_command:
+0894: DD6E00  	    LD      HL, (IX + COMMAND_NEXT_COMMAND)
+0897: DD6601  	
+089A: E5      	    PUSH    HL
+089B: DDE1    	    POP     IX
+089D: 18D1    	    JR      help_command_loop
               	
-0860:         	help_command_done:
-0860: 115E01  	    LD      DE, INPUT_OK_NL
-0863: CD3A07  	    CALL    PRINT
+089F:         	help_command_done:
+089F: 115E01  	    LD      DE, INPUT_OK_NL
+08A2: CD3E07  	    CALL    PRINT
               	
-0866: C9      	    RET
+08A5: C9      	    RET
               	    
               	    .include "command-processor/commands/add-command.asm"
               	;; ==================================================================
@@ -1189,69 +1215,69 @@
               	;; OUT: -
               	;; MOD: A, DE, HL, IX
               	;; ==================================================================
-0867:         	add_command:
-0867: 117B01  	    LD      DE, NOT_IMPLEMENTED_NL
-086A: C33A07  	    JP      print
+08A6:         	add_command:
+08A6: 117B01  	    LD      DE, NOT_IMPLEMENTED_NL
+08A9: C33E07  	    JP      print
               	
-086D: CDF507  	    CALL    parse_token
+08AC: CD1408  	    CALL    parse_token
               	
-0870: 78      	    LD      A, B                            ; check if a word was specified
-0871: B7      	    OR      A
-0872: 283D    	    JR      Z, add_command_syntax_error
+08AF: 78      	    LD      A, B                            ; check if a word was specified
+08B0: B7      	    OR      A
+08B1: 283D    	    JR      Z, add_command_syntax_error
               	
-0874: 2ACA0C  	    LD      HL, (CURRENT_INPUT_POS)         ; check that no further input was specified
-0877: 7E      	    LD      A, (HL)
-0878: B7      	    OR      A
-0879: 2036    	    JR      NZ, add_command_syntax_error
+08B3: 2A0A0D  	    LD      HL, (CURRENT_INPUT_POS)         ; check that no further input was specified
+08B6: 7E      	    LD      A, (HL)
+08B7: B7      	    OR      A
+08B8: 2036    	    JR      NZ, add_command_syntax_error
               	
-087B:         	add_command_write_word_text:
-087B: DD2AAC0D	    LD      IX, (WORD_LIST_NEXT)
+08BA:         	add_command_write_word_text:
+08BA: DD2AEC0D	    LD      IX, (WORD_LIST_NEXT)
               	
-087F: 78      	    LD      A, B                            ; write the number of characters (excludes the null terminator)
-0880: DD7700  	    LD      (IX + 0), A
+08BE: 78      	    LD      A, B                            ; write the number of characters (excludes the null terminator)
+08BF: DD7700  	    LD      (IX + 0), A
               	
-0883: 2AAA0D  	    LD      HL, (WORD_LIST_HEAD)            ; write the new entry to point to the previous entry
-0886: DD7501  	    LD      (IX + 1), HL
-0889: DD7402  	
+08C2: 2AEA0D  	    LD      HL, (WORD_LIST_HEAD)            ; write the new entry to point to the previous entry
+08C5: DD7501  	    LD      (IX + 1), HL
+08C8: DD7402  	
               	
-088C: C5      	    PUSH    BC                              ; save the number of characters value that's in B
+08CB: C5      	    PUSH    BC                              ; save the number of characters value that's in B
               	
-088D: 2AAC0D  	    LD      HL, (WORD_LIST_NEXT)            ; location for the new word
-0890: 110500  	    LD      DE, 5                           ; offset HL to the location to write the word itself
-0893: 19      	    ADD     HL, DE
+08CC: 2AEC0D  	    LD      HL, (WORD_LIST_NEXT)            ; location for the new word
+08CF: 110500  	    LD      DE, 5                           ; offset HL to the location to write the word itself
+08D2: 19      	    ADD     HL, DE
               	
-0894: DD7503  	    LD      (IX + 3), HL                    ; update the header with the location where the text will be copied to
-0897: DD7404  	
+08D3: DD7503  	    LD      (IX + 3), HL                    ; update the header with the location where the text will be copied to
+08D6: DD7404  	
               	
-089A: EB      	    EX      DE, HL                          ; update DE to be the destination pointed to by HL
-089B: 21CC0C  	    LD      HL, CURRENT_TOKEN               ; HL is the source
+08D9: EB      	    EX      DE, HL                          ; update DE to be the destination pointed to by HL
+08DA: 210D0D  	    LD      HL, CURRENT_TOKEN               ; HL is the source
               	
-089E: 48      	    LD      C, B
-089F: 0600    	    LD      B, 0x00
-08A1: 03      	    INC     BC                              ; copy the null terminated, too
+08DD: 48      	    LD      C, B
+08DE: 0600    	    LD      B, 0x00
+08E0: 03      	    INC     BC                              ; copy the null terminated, too
               	
-08A2: EDB0    	    LDIR                                    ; write the word, DE will be the new WORD_LIST_NEXT value
+08E1: EDB0    	    LDIR                                    ; write the word, DE will be the new WORD_LIST_NEXT value
               	
-08A4: C1      	    POP     BC                              ; restore the number of characters value in B
+08E3: C1      	    POP     BC                              ; restore the number of characters value in B
               	
-08A5:         	add_command_update_word_list_pointers:
-08A5: 2AAC0D  	    LD      HL, (WORD_LIST_NEXT)            ; the head is now what was previously the next location
-08A8: 22AA0D  	    LD      (WORD_LIST_HEAD), HL
-08AB: ED53AC0D	    LD      (WORD_LIST_NEXT), DE            ; the next location is now where DE ended up
+08E4:         	add_command_update_word_list_pointers:
+08E4: 2AEC0D  	    LD      HL, (WORD_LIST_NEXT)            ; the head is now what was previously the next location
+08E7: 22EA0D  	    LD      (WORD_LIST_HEAD), HL
+08EA: ED53EC0D	    LD      (WORD_LIST_NEXT), DE            ; the next location is now where DE ended up
               	
-08AF: 1807    	    JR      add_command_done
+08EE: 1807    	    JR      add_command_done
               	
-08B1:         	add_command_syntax_error:
-08B1: 116B01  	    LD      DE, SYNTAX_ERROR_NL
-08B4: CD3A07  	    CALL    print
+08F0:         	add_command_syntax_error:
+08F0: 116B01  	    LD      DE, SYNTAX_ERROR_NL
+08F3: CD3E07  	    CALL    print
               	
-08B7: C9      	    RET
+08F6: C9      	    RET
               	
-08B8:         	add_command_done:
-08B8: 115E01  	    LD      DE, INPUT_OK_NL
-08BB: CD3A07  	    CALL    PRINT
+08F7:         	add_command_done:
+08F7: 115E01  	    LD      DE, INPUT_OK_NL
+08FA: CD3E07  	    CALL    PRINT
               	
-08BE: C9      	    RET
+08FD: C9      	    RET
               	    
               	    .include "command-processor/commands/find-command.asm"
               	;; ==================================================================
@@ -1260,93 +1286,93 @@
               	;; OUT: -
               	;; MOD: A, DE, HL, IX
               	;; ==================================================================
-08BF:         	find_command:
-08BF: 117B01  	    LD      DE, NOT_IMPLEMENTED_NL
-08C2: C33A07  	    JP      print
+08FE:         	find_command:
+08FE: 117B01  	    LD      DE, NOT_IMPLEMENTED_NL
+0901: C33E07  	    JP      print
               	
-08C5: CDF507  	    CALL    parse_token
+0904: CD1408  	    CALL    parse_token
               	
-08C8: 78      	    LD      A, B                            ; check if a word was specified
-08C9: B7      	    OR      A
-08CA: 2834    	    JR      Z, find_command_syntax_error
+0907: 78      	    LD      A, B                            ; check if a word was specified
+0908: B7      	    OR      A
+0909: 2834    	    JR      Z, find_command_syntax_error
               	
-08CC: 2ACA0C  	    LD      HL, (CURRENT_INPUT_POS)         ; check that no further input was specified
-08CF: 7E      	    LD      A, (HL)
-08D0: B7      	    OR      A
-08D1: 202D    	    JR      NZ, find_command_syntax_error
+090B: 2A0A0D  	    LD      HL, (CURRENT_INPUT_POS)         ; check that no further input was specified
+090E: 7E      	    LD      A, (HL)
+090F: B7      	    OR      A
+0910: 202D    	    JR      NZ, find_command_syntax_error
               	
-08D3:         	find_command_execute:
-08D3: DD2AAA0D	    LD      IX, (WORD_LIST_HEAD)
+0912:         	find_command_execute:
+0912: DD2AEA0D	    LD      IX, (WORD_LIST_HEAD)
               	
-08D7:         	find_command_loop:
-08D7: DD7E00  	    LD      A, (IX + 0)                     ; load the length of the word
-08DA: B7      	    OR      A                               ; if 0, then end of list reached
-08DB: 2840    	    JR      Z, find_command_word_not_found
+0916:         	find_command_loop:
+0916: DD7E00  	    LD      A, (IX + 0)                     ; load the length of the word
+0919: B7      	    OR      A                               ; if 0, then end of list reached
+091A: 2840    	    JR      Z, find_command_word_not_found
               	
-08DD: B8      	    CP      B
-08DE: 2015    	    JR      NZ, find_command_next_word      ; different length, so on to the next one
+091C: B8      	    CP      B
+091D: 2015    	    JR      NZ, find_command_next_word      ; different length, so on to the next one
               	
-08E0: 21CC0C  	    LD      HL, CURRENT_TOKEN               ; the word to find
-08E3: DD5E03  	    LD      E, (IX + 3)                     ; the current word
-08E6: DD5604  	    LD      D, (IX + 4)
+091F: 210D0D  	    LD      HL, CURRENT_TOKEN               ; the word to find
+0922: DD5E03  	    LD      E, (IX + 3)                     ; the current word
+0925: DD5604  	    LD      D, (IX + 4)
               	
-08E9: 48      	    LD      C, B                            ; the number of characters
-08EA:         	find_command_loop_match_character:
-08EA: 1A      	    LD      A, (DE)
-08EB: BE      	    CP      (HL)
-08EC: 2007    	    JR      NZ, find_command_next_word
+0928: 48      	    LD      C, B                            ; the number of characters
+0929:         	find_command_loop_match_character:
+0929: 1A      	    LD      A, (DE)
+092A: BE      	    CP      (HL)
+092B: 2007    	    JR      NZ, find_command_next_word
               	
-08EE: 23      	    INC     HL
-08EF: 13      	    INC     DE
+092D: 23      	    INC     HL
+092E: 13      	    INC     DE
               	
-08F0: 05      	    DEC     B
-08F1: 20F7    	    JR      NZ, find_command_loop_match_character
+092F: 05      	    DEC     B
+0930: 20F7    	    JR      NZ, find_command_loop_match_character
               	
-08F3: 1812    	    JR      find_command_word_found
+0932: 1812    	    JR      find_command_word_found
               	
-08F5:         	find_command_next_word:
-08F5: DD5E01  	    LD      E, (IX + 1)                     ; load the address of the next word
-08F8: DD5602  	    LD      D, (IX + 2)
-08FB: D5      	    PUSH    DE
-08FC: DDE1    	    POP     IX                              ; update IX to point to the next word
-08FE: 18D7    	    JR      find_command_loop
+0934:         	find_command_next_word:
+0934: DD5E01  	    LD      E, (IX + 1)                     ; load the address of the next word
+0937: DD5602  	    LD      D, (IX + 2)
+093A: D5      	    PUSH    DE
+093B: DDE1    	    POP     IX                              ; update IX to point to the next word
+093D: 18D7    	    JR      find_command_loop
               	
-0900:         	find_command_syntax_error:
-0900: 116B01  	    LD      DE, SYNTAX_ERROR_NL
-0903: CD3A07  	    CALL    print
+093F:         	find_command_syntax_error:
+093F: 116B01  	    LD      DE, SYNTAX_ERROR_NL
+0942: CD3E07  	    CALL    print
               	
-0906: C9      	    RET
+0945: C9      	    RET
               	
-0907:         	find_command_word_found
+0946:         	find_command_word_found
               	    .local
-0907: 111009  	    LD      DE, MESSAGE
-090A: CD3A07  	    CALL    PRINT
-090D: C33709  	    JP      find_command_done
+0946: 114F09  	    LD      DE, MESSAGE
+0949: CD3E07  	    CALL    PRINT
+094C: C37609  	    JP      find_command_done
               	
-0910: 576F7264	MESSAGE DEFM    "Word found.", 10, 0
-0914: 20666F75	
-0918: 6E642E0A	
-091C: 00      	
+094F: 576F7264	MESSAGE DEFM    "Word found.", 10, 0
+0953: 20666F75	
+0957: 6E642E0A	
+095B: 00      	
               	    .endlocal
               	
-091D:         	find_command_word_not_found
+095C:         	find_command_word_not_found
               	    .local
-091D: 112609  	    LD      DE, MESSAGE
-0920: CD3A07  	    CALL    PRINT
-0923: C33709  	    JP      find_command_done
+095C: 116509  	    LD      DE, MESSAGE
+095F: CD3E07  	    CALL    PRINT
+0962: C37609  	    JP      find_command_done
               	
-0926: 576F7264	MESSAGE DEFM    "Word not found.", 10, 0
-092A: 206E6F74	
-092E: 20666F75	
-0932: 6E642E0A	
-0936: 00      	
+0965: 576F7264	MESSAGE DEFM    "Word not found.", 10, 0
+0969: 206E6F74	
+096D: 20666F75	
+0971: 6E642E0A	
+0975: 00      	
               	    .endlocal
               	
-0937:         	find_command_done:
-0937: 115E01  	    LD      DE, INPUT_OK_NL
-093A: CD3A07  	    CALL    PRINT
+0976:         	find_command_done:
+0976: 115E01  	    LD      DE, INPUT_OK_NL
+0979: CD3E07  	    CALL    PRINT
               	
-093D: C9      	    RET
+097C: C9      	    RET
               	    
               	    .include "command-processor/commands/remove-command.asm"
               	;; ==================================================================
@@ -1355,55 +1381,55 @@
               	;; OUT: -
               	;; MOD: A, DE, HL, IX
               	;; ==================================================================
-093E:         	remove_command:
-093E: 117B01  	    LD      DE, NOT_IMPLEMENTED_NL
-0941: C33A07  	    JP      print
+097D:         	remove_command:
+097D: 117B01  	    LD      DE, NOT_IMPLEMENTED_NL
+0980: C33E07  	    JP      print
               	
-0944: 2ACA0C  	    LD      HL, (CURRENT_INPUT_POS)         ; check that no further input was specified
-0947: 7E      	    LD      A, (HL)
-0948: B7      	    OR      A
-0949: 2019    	    JR      NZ, remove_command_syntax_error
+0983: 2A0A0D  	    LD      HL, (CURRENT_INPUT_POS)         ; check that no further input was specified
+0986: 7E      	    LD      A, (HL)
+0987: B7      	    OR      A
+0988: 2019    	    JR      NZ, remove_command_syntax_error
               	
-094B: 2AAA0D  	    LD      HL, (WORD_LIST_HEAD)
-094E: 7E      	    LD      A, (HL)
-094F: B7      	    OR      A
-0950: 2819    	    JR      Z, remove_command_word_list_is_empty
+098A: 2AEA0D  	    LD      HL, (WORD_LIST_HEAD)
+098D: 7E      	    LD      A, (HL)
+098E: B7      	    OR      A
+098F: 2819    	    JR      Z, remove_command_word_list_is_empty
               	
-0952:         	remove_command_execute:
-0952: 22AC0D  	    LD      (WORD_LIST_NEXT), HL            ; the previous word becomes the head
+0991:         	remove_command_execute:
+0991: 22EC0D  	    LD      (WORD_LIST_NEXT), HL            ; the previous word becomes the head
               	
-0955: DD21AA0D	    LD      IX, WORD_LIST_HEAD
-0959: DD6E01  	    LD      HL, (IX+1)                      ; HL = address of previous word
-095C: DD6602  	
-095F: 22AA0D  	    LD      (WORD_LIST_HEAD), HL
+0994: DD21EA0D	    LD      IX, WORD_LIST_HEAD
+0998: DD6E01  	    LD      HL, (IX+1)                      ; HL = address of previous word
+099B: DD6602  	
+099E: 22EA0D  	    LD      (WORD_LIST_HEAD), HL
               	
-0962: 1825    	    JR      remove_command_done
+09A1: 1825    	    JR      remove_command_done
               	
-0964:         	remove_command_syntax_error:
-0964: 116B01  	    LD      DE, SYNTAX_ERROR_NL
-0967: CD3A07  	    CALL    print
+09A3:         	remove_command_syntax_error:
+09A3: 116B01  	    LD      DE, SYNTAX_ERROR_NL
+09A6: CD3E07  	    CALL    print
               	
-096A: C9      	    RET
+09A9: C9      	    RET
               	
-096B:         	remove_command_word_list_is_empty:
+09AA:         	remove_command_word_list_is_empty:
               	    .local
-096B: 117409  	    LD      DE, MESSAGE
-096E: CD3A07  	    CALL    PRINT
-0971: C33709  	    JP      find_command_done
+09AA: 11B309  	    LD      DE, MESSAGE
+09AD: CD3E07  	    CALL    PRINT
+09B0: C37609  	    JP      find_command_done
               	
-0974: 576F7264	MESSAGE             DEFM    "Word list is empty.", 10, 0
-0978: 206C6973	
-097C: 74206973	
-0980: 20656D70	
-0984: 74792E0A	
-0988: 00      	
+09B3: 576F7264	MESSAGE             DEFM    "Word list is empty.", 10, 0
+09B7: 206C6973	
+09BB: 74206973	
+09BF: 20656D70	
+09C3: 74792E0A	
+09C7: 00      	
               	    .endlocal
               	
-0989:         	remove_command_done:
-0989: 115E01  	    LD      DE, INPUT_OK_NL
-098C: CD3A07  	    CALL    PRINT
+09C8:         	remove_command_done:
+09C8: 115E01  	    LD      DE, INPUT_OK_NL
+09CB: CD3E07  	    CALL    PRINT
               	
-098F: C9      	    RET
+09CE: C9      	    RET
               	    
               	    .include "command-processor/commands/dump-command.asm"
               	;; ==================================================================
@@ -1412,48 +1438,48 @@
               	;; OUT: -
               	;; MOD: A, DE, HL, IX
               	;; ==================================================================
-0990:         	dump_command:
-0990: 117B01  	    LD      DE, NOT_IMPLEMENTED_NL
-0993: C33A07  	    JP      print
+09CF:         	dump_command:
+09CF: 117B01  	    LD      DE, NOT_IMPLEMENTED_NL
+09D2: C33E07  	    JP      print
               	
-0996: 2ACA0C  	    LD      HL, (CURRENT_INPUT_POS)         ; check that no further input was specified
-0999: 7E      	    LD      A, (HL)
-099A: B7      	    OR      A
-099B: 2807    	    JR      Z, dump_command_execute
+09D5: 2A0A0D  	    LD      HL, (CURRENT_INPUT_POS)         ; check that no further input was specified
+09D8: 7E      	    LD      A, (HL)
+09D9: B7      	    OR      A
+09DA: 2807    	    JR      Z, dump_command_execute
               	
-099D:         	dump_command_syntax_error:
-099D: 116B01  	    LD      DE, SYNTAX_ERROR_NL
-09A0: CD3A07  	    CALL    print
+09DC:         	dump_command_syntax_error:
+09DC: 116B01  	    LD      DE, SYNTAX_ERROR_NL
+09DF: CD3E07  	    CALL    print
               	
-09A3: C9      	    RET
+09E2: C9      	    RET
               	
-09A4:         	dump_command_execute:
-09A4: DD2AAA0D	    LD      IX, (WORD_LIST_HEAD)
+09E3:         	dump_command_execute:
+09E3: DD2AEA0D	    LD      IX, (WORD_LIST_HEAD)
               	
-09A8:         	dump_command_loop:
-09A8: DD7E00  	    LD      A, (IX + 0)                     ; load the length of the word
-09AB: B7      	    OR      A                               ; if 0, then end of list reached
-09AC: 281A    	    JR      Z, dump_command_done
+09E7:         	dump_command_loop:
+09E7: DD7E00  	    LD      A, (IX + 0)                     ; load the length of the word
+09EA: B7      	    OR      A                               ; if 0, then end of list reached
+09EB: 281A    	    JR      Z, dump_command_done
               	
-09AE: DD5E03  	    LD      E, (IX + 3)                     ; print out the word
-09B1: DD5604  	    LD      D, (IX + 4)
-09B4: CD3A07  	    CALL    print
+09ED: DD5E03  	    LD      E, (IX + 3)                     ; print out the word
+09F0: DD5604  	    LD      D, (IX + 4)
+09F3: CD3E07  	    CALL    print
               	
-09B7: 116501  	    LD      DE, NEW_LINE
-09BA: CD3A07  	    CALL    print
+09F6: 116501  	    LD      DE, NEW_LINE
+09F9: CD3E07  	    CALL    print
               	
-09BD:         	dump_command_next_command:
-09BD: DD5E01  	    LD      E, (IX + 1)                     ; load the address of the next word and put it on the stack
-09C0: DD5602  	    LD      D, (IX + 2)
-09C3: D5      	    PUSH    DE
-09C4: DDE1    	    POP     IX                              ; next word
-09C6: 18E0    	    JR      dump_command_loop
+09FC:         	dump_command_next_command:
+09FC: DD5E01  	    LD      E, (IX + 1)                     ; load the address of the next word and put it on the stack
+09FF: DD5602  	    LD      D, (IX + 2)
+0A02: D5      	    PUSH    DE
+0A03: DDE1    	    POP     IX                              ; next word
+0A05: 18E0    	    JR      dump_command_loop
               	
-09C8:         	dump_command_done:
-09C8: 115E01  	    LD      DE, INPUT_OK_NL
-09CB: CD3A07  	    CALL    PRINT
+0A07:         	dump_command_done:
+0A07: 115E01  	    LD      DE, INPUT_OK_NL
+0A0A: CD3E07  	    CALL    PRINT
               	
-09CE: C9      	    RET
+0A0D: C9      	    RET
               	    
               	    .include "command-processor/commands/checkpoint-command.asm"
               	;; ==================================================================
@@ -1462,32 +1488,32 @@
               	;; OUT: -
               	;; MOD: A, DE, HL, IX
               	;; ==================================================================
-09CF:         	checkpoint_command:
-09CF: 117B01  	    LD      DE, NOT_IMPLEMENTED_NL
-09D2: C33A07  	    JP      print
+0A0E:         	checkpoint_command:
+0A0E: 117B01  	    LD      DE, NOT_IMPLEMENTED_NL
+0A11: C33E07  	    JP      print
               	
-09D5: 2ACA0C  	    LD      HL, (CURRENT_INPUT_POS)         ; check that no further input was specified
-09D8: 7E      	    LD      A, (HL)
-09D9: B7      	    OR      A
-09DA: 2807    	    JR      Z, checkpoint_command_execute
+0A14: 2A0A0D  	    LD      HL, (CURRENT_INPUT_POS)         ; check that no further input was specified
+0A17: 7E      	    LD      A, (HL)
+0A18: B7      	    OR      A
+0A19: 2807    	    JR      Z, checkpoint_command_execute
               	
-09DC:         	checkpoint_command_syntax_error:
-09DC: 116B01  	    LD      DE, SYNTAX_ERROR_NL
-09DF: CD3A07  	    CALL    print
+0A1B:         	checkpoint_command_syntax_error:
+0A1B: 116B01  	    LD      DE, SYNTAX_ERROR_NL
+0A1E: CD3E07  	    CALL    print
               	
-09E2: C9      	    RET
+0A21: C9      	    RET
               	
-09E3:         	checkpoint_command_execute:
-09E3: 2AAA0D  	    LD      HL, (WORD_LIST_HEAD)
-09E6: 22AE0D  	    LD      (WORD_LIST_CHECKPOINT_HEAD), HL
-09E9: 2AAC0D  	    LD      HL, (WORD_LIST_NEXT)
-09EC: 22B00D  	    LD      (WORD_LIST_CHECKPOINT_NEXT), HL
+0A22:         	checkpoint_command_execute:
+0A22: 2AEA0D  	    LD      HL, (WORD_LIST_HEAD)
+0A25: 22EE0D  	    LD      (WORD_LIST_CHECKPOINT_HEAD), HL
+0A28: 2AEC0D  	    LD      HL, (WORD_LIST_NEXT)
+0A2B: 22F00D  	    LD      (WORD_LIST_CHECKPOINT_NEXT), HL
               	
-09EF:         	checkpoint_command_done:
-09EF: 115E01  	    LD      DE, INPUT_OK_NL
-09F2: CD3A07  	    CALL    PRINT
+0A2E:         	checkpoint_command_done:
+0A2E: 115E01  	    LD      DE, INPUT_OK_NL
+0A31: CD3E07  	    CALL    PRINT
               	
-09F5: C9      	    RET
+0A34: C9      	    RET
               	    
               	    .include "command-processor/commands/rollback-command.asm"
               	;; ==================================================================
@@ -1496,61 +1522,61 @@
               	;; OUT: -
               	;; MOD: A, DE, HL, IX
               	;; ==================================================================
-09F6:         	rollback_command:
-09F6: 117B01  	    LD      DE, NOT_IMPLEMENTED_NL
-09F9: C33A07  	    JP      print
+0A35:         	rollback_command:
+0A35: 117B01  	    LD      DE, NOT_IMPLEMENTED_NL
+0A38: C33E07  	    JP      print
               	
-09FC: 2ACA0C  	    LD      HL, (CURRENT_INPUT_POS)         ; check that no further input was specified
-09FF: 7E      	    LD      A, (HL)
-0A00: B7      	    OR      A
-0A01: 203E    	    JR      NZ, rollback_command_syntax_error
+0A3B: 2A0A0D  	    LD      HL, (CURRENT_INPUT_POS)         ; check that no further input was specified
+0A3E: 7E      	    LD      A, (HL)
+0A3F: B7      	    OR      A
+0A40: 203E    	    JR      NZ, rollback_command_syntax_error
               	
-0A03: 3E00    	    LD      A, 0                            ; check if a checkpoint has been set (i.e., it's non-zero)
+0A42: 3E00    	    LD      A, 0                            ; check if a checkpoint has been set (i.e., it's non-zero)
               	
-0A05: 21AE0D  	    LD      HL, WORD_LIST_CHECKPOINT_HEAD
-0A08: B6      	    OR      A, (HL)
-0A09: 2004    	    JR      NZ, rollback_command_execute
+0A44: 21EE0D  	    LD      HL, WORD_LIST_CHECKPOINT_HEAD
+0A47: B6      	    OR      A, (HL)
+0A48: 2004    	    JR      NZ, rollback_command_execute
               	
-0A0B: 23      	    INC     HL
-0A0C: B6      	    OR      A, (HL)
-0A0D: 2817    	    JR      Z, rollback_command_no_checkpoint
+0A4A: 23      	    INC     HL
+0A4B: B6      	    OR      A, (HL)
+0A4C: 2817    	    JR      Z, rollback_command_no_checkpoint
               	
-0A0F:         	rollback_command_execute:
-0A0F: 2AAE0D  	    LD      HL, (WORD_LIST_CHECKPOINT_HEAD)
-0A12: 22AA0D  	    LD      (WORD_LIST_HEAD), HL
-0A15: 2AB00D  	    LD      HL, (WORD_LIST_CHECKPOINT_NEXT)
-0A18: 22AC0D  	    LD      (WORD_LIST_NEXT), HL
+0A4E:         	rollback_command_execute:
+0A4E: 2AEE0D  	    LD      HL, (WORD_LIST_CHECKPOINT_HEAD)
+0A51: 22EA0D  	    LD      (WORD_LIST_HEAD), HL
+0A54: 2AF00D  	    LD      HL, (WORD_LIST_CHECKPOINT_NEXT)
+0A57: 22EC0D  	    LD      (WORD_LIST_NEXT), HL
               	
-0A1B: 210000  	    LD      HL, 0x000                       ; clear the checkpoint
-0A1E: 22AE0D  	    LD      (WORD_LIST_CHECKPOINT_HEAD), HL
-0A21: 22B00D  	    LD      (WORD_LIST_CHECKPOINT_NEXT), HL
+0A5A: 210000  	    LD      HL, 0x000                       ; clear the checkpoint
+0A5D: 22EE0D  	    LD      (WORD_LIST_CHECKPOINT_HEAD), HL
+0A60: 22F00D  	    LD      (WORD_LIST_CHECKPOINT_NEXT), HL
               	
-0A24: 1822    	    JR      rollback_command_done
+0A63: 1822    	    JR      rollback_command_done
               	
-0A26:         	rollback_command_no_checkpoint:
+0A65:         	rollback_command_no_checkpoint:
               	    .local
-0A26: 112D0A  	    LD      DE, MESSAGE
-0A29: CD3A07  	    CALL    print
-0A2C: C9      	    RET
+0A65: 116C0A  	    LD      DE, MESSAGE
+0A68: CD3E07  	    CALL    print
+0A6B: C9      	    RET
               	
-0A2D: 4E6F2063	MESSAGE:            DEFM    "No checkpoint set.", 10, 0
-0A31: 6865636B	
-0A35: 706F696E	
-0A39: 74207365	
-0A3D: 742E0A00	
+0A6C: 4E6F2063	MESSAGE:            DEFM    "No checkpoint set.", 10, 0
+0A70: 6865636B	
+0A74: 706F696E	
+0A78: 74207365	
+0A7C: 742E0A00	
               	    .endlocal
               	
-0A41:         	rollback_command_syntax_error:
-0A41: 116B01  	    LD      DE, SYNTAX_ERROR_NL
-0A44: CD3A07  	    CALL    print
+0A80:         	rollback_command_syntax_error:
+0A80: 116B01  	    LD      DE, SYNTAX_ERROR_NL
+0A83: CD3E07  	    CALL    print
               	
-0A47: C9      	    RET
+0A86: C9      	    RET
               	
-0A48:         	rollback_command_done:
-0A48: 115E01  	    LD      DE, INPUT_OK_NL
-0A4B: CD3A07  	    CALL    PRINT
+0A87:         	rollback_command_done:
+0A87: 115E01  	    LD      DE, INPUT_OK_NL
+0A8A: CD3E07  	    CALL    PRINT
               	
-0A4E: C9      	    RET
+0A8D: C9      	    RET
               	    
               	    .include "command-processor/commands/clear-command.asm"
               	;; ==================================================================
@@ -1559,37 +1585,37 @@
               	;; OUT: -
               	;; MOD: A, DE, HL, IX
               	;; ==================================================================
-0A4F:         	clear_command:
-0A4F: 117B01  	    LD      DE, NOT_IMPLEMENTED_NL
-0A52: C33A07  	    JP      print
+0A8E:         	clear_command:
+0A8E: 117B01  	    LD      DE, NOT_IMPLEMENTED_NL
+0A91: C33E07  	    JP      print
               	
-0A55: 2ACA0C  	    LD      HL, (CURRENT_INPUT_POS)         ; check that no further input was specified
-0A58: 7E      	    LD      A, (HL)
-0A59: B7      	    OR      A
-0A5A: 2807    	    JR      Z, clear_command_execute
+0A94: 2A0A0D  	    LD      HL, (CURRENT_INPUT_POS)         ; check that no further input was specified
+0A97: 7E      	    LD      A, (HL)
+0A98: B7      	    OR      A
+0A99: 2807    	    JR      Z, clear_command_execute
               	
-0A5C:         	clear_command_syntax_error:
-0A5C: 116B01  	    LD      DE, SYNTAX_ERROR_NL
-0A5F: CD3A07  	    CALL    print
+0A9B:         	clear_command_syntax_error:
+0A9B: 116B01  	    LD      DE, SYNTAX_ERROR_NL
+0A9E: CD3E07  	    CALL    print
               	
-0A62: C9      	    RET
+0AA1: C9      	    RET
               	
-0A63:         	clear_command_execute:
-0A63: DD21AA0D	    LD      IX, WORD_LIST_HEAD
-0A67: 21B20D  	    LD      HL, WORD_LIST_END
-0A6A: DD7500  	    LD      (IX), HL
-0A6D: DD7401  	
+0AA2:         	clear_command_execute:
+0AA2: DD21EA0D	    LD      IX, WORD_LIST_HEAD
+0AA6: 21F20D  	    LD      HL, WORD_LIST_END
+0AA9: DD7500  	    LD      (IX), HL
+0AAC: DD7401  	
               	
-0A70: DD21AC0D	    LD      IX, WORD_LIST_NEXT
-0A74: 23      	    INC     HL
-0A75: DD7500  	    LD      (IX), HL
-0A78: DD7401  	
+0AAF: DD21EC0D	    LD      IX, WORD_LIST_NEXT
+0AB3: 23      	    INC     HL
+0AB4: DD7500  	    LD      (IX), HL
+0AB7: DD7401  	
               	
-0A7B:         	clear_command_done:
-0A7B: 115E01  	    LD      DE, INPUT_OK_NL
-0A7E: CD3A07  	    CALL    PRINT
+0ABA:         	clear_command_done:
+0ABA: 115E01  	    LD      DE, INPUT_OK_NL
+0ABD: CD3E07  	    CALL    PRINT
               	
-0A81: C9      	    RET
+0AC0: C9      	    RET
               	    
               	    .include "command-processor/commands/load-command.asm"
               	;; ==================================================================
@@ -1599,180 +1625,180 @@
               	;; OUT: -
               	;; MOD: A, DE, HL, IX
               	;; ==================================================================
-0A82:         	load_command:
-0A82: 117B01  	    LD      DE, NOT_IMPLEMENTED_NL
-0A85: C33A07  	    JP      print
+0AC1:         	load_command:
+0AC1: 117B01  	    LD      DE, NOT_IMPLEMENTED_NL
+0AC4: C33E07  	    JP      print
               	
-0A88: CDA901  	    CALL    parse_file_name
+0AC7: CDA901  	    CALL    parse_file_name
               	
-0A8B: B7      	    OR      A
-0A8C: C2570B  	    JP      NZ, load_command_failed         ; error
+0ACA: B7      	    OR      A
+0ACB: C2960B  	    JP      NZ, load_command_failed         ; error
               	
-0A8F:         	load_command_execute:
-0A8F: CD2602  	    CALL    load_file_prepare
-0A92: B7      	    OR      A
-0A93: C2570B  	    JP      NZ, load_command_failed         ; error
+0ACE:         	load_command_execute:
+0ACE: CD2602  	    CALL    load_file_prepare
+0AD1: B7      	    OR      A
+0AD2: C2960B  	    JP      NZ, load_command_failed         ; error
               	
-0A96:         	load_command_fetch_first_buffer:
-0A96: CD4903  	    CALL    load_file_fetch
+0AD5:         	load_command_fetch_first_buffer:
+0AD5: CD4903  	    CALL    load_file_fetch
               	
-0A99: B7      	    OR      A                               ; check if nothing loaded
-0A9A: C2580B  	    JP      NZ, load_command_EOF
+0AD8: B7      	    OR      A                               ; check if nothing loaded
+0AD9: C2970B  	    JP      NZ, load_command_EOF
               	
-0A9D: 3A280D  	    LD      A, (LOAD_FILE_BUFFER)
+0ADC: 3A680D  	    LD      A, (LOAD_FILE_BUFFER)
               	
-0AA0: B7      	    OR      A                               ; check if first character is a null
-0AA1: CA580B  	    JP      Z, load_command_EOF
+0ADF: B7      	    OR      A                               ; check if first character is a null
+0AE0: CA970B  	    JP      Z, load_command_EOF
               	
-0AA4: FE1A    	    CP      ASCII_EOF                       ; check if first character is EOF
-0AA6: CA580B  	    JP      Z, load_command_EOF
+0AE3: FE1A    	    CP      ASCII_EOF                       ; check if first character is EOF
+0AE5: CA970B  	    JP      Z, load_command_EOF
               	
-0AA9: 21280D  	    LD      HL, LOAD_FILE_BUFFER            ; start of source, DE points to INPUT_BUFFER after "ADD "
-0AAC: 22A80D  	    LD      (LOAD_FILE_BUFFER_POS), HL
+0AE8: 21680D  	    LD      HL, LOAD_FILE_BUFFER            ; start of source, DE points to INPUT_BUFFER after "ADD "
+0AEB: 22E80D  	    LD      (LOAD_FILE_BUFFER_POS), HL
               	
-0AAF:         	load_command_load_word:
-0AAF: CD590B  	    CALL    load_command_initialize_input_buffer
+0AEE:         	load_command_load_word:
+0AEE: CD980B  	    CALL    load_command_initialize_input_buffer
               	
-0AB2: 0604    	    LD      B, 0x04                         ; input buffer content length - length of "ADD "
+0AF1: 0604    	    LD      B, 0x04                         ; input buffer content length - length of "ADD "
               	
-0AB4:         	load_command_load_word_loop:
-0AB4: D5      	    PUSH    DE
-0AB5: 11A80D  	    LD      DE, LOAD_FILE_BUFFER_POS
-0AB8: 2AA80D  	    LD      HL, (LOAD_FILE_BUFFER_POS)
-0ABB: ED52    	    SBC     HL, DE
-0ABD: D1      	    POP     DE
+0AF3:         	load_command_load_word_loop:
+0AF3: D5      	    PUSH    DE
+0AF4: 11E80D  	    LD      DE, LOAD_FILE_BUFFER_POS
+0AF7: 2AE80D  	    LD      HL, (LOAD_FILE_BUFFER_POS)
+0AFA: ED52    	    SBC     HL, DE
+0AFC: D1      	    POP     DE
               	
-0ABE: 201D    	    JR      NZ, load_command_load_word_loop_continue
+0AFD: 201D    	    JR      NZ, load_command_load_word_loop_continue
               	
-0AC0:         	load_command_load_fetch_next_buffer:
-0AC0: D9      	    EXX
-0AC1: CD4903  	    CALL    load_file_fetch
-0AC4: F5      	    PUSH    AF
-0AC5: D9      	    EXX
-0AC6: F1      	    POP     AF
+0AFF:         	load_command_load_fetch_next_buffer:
+0AFF: D9      	    EXX
+0B00: CD4903  	    CALL    load_file_fetch
+0B03: F5      	    PUSH    AF
+0B04: D9      	    EXX
+0B05: F1      	    POP     AF
               	
-0AC7: B7      	    OR      A                               ; check if nothing loaded
-0AC8: C2580B  	    JP      NZ, load_command_EOF
+0B06: B7      	    OR      A                               ; check if nothing loaded
+0B07: C2970B  	    JP      NZ, load_command_EOF
               	
-0ACB: 3A280D  	    LD      A, (LOAD_FILE_BUFFER)
+0B0A: 3A680D  	    LD      A, (LOAD_FILE_BUFFER)
               	
-0ACE: B7      	    OR      A                               ; check if first character is a null
-0ACF: CA580B  	    JP      Z, load_command_EOF
+0B0D: B7      	    OR      A                               ; check if first character is a null
+0B0E: CA970B  	    JP      Z, load_command_EOF
               	
-0AD2: FE1A    	    CP      ASCII_EOF                       ; check if first character is EOF
-0AD4: CA580B  	    JP      Z, load_command_EOF
+0B11: FE1A    	    CP      ASCII_EOF                       ; check if first character is EOF
+0B13: CA970B  	    JP      Z, load_command_EOF
               	
-0AD7: 21280D  	    LD      HL, LOAD_FILE_BUFFER            ; start of source, DE points to INPUT_BUFFER after "ADD "
-0ADA: 22A80D  	    LD      (LOAD_FILE_BUFFER_POS), HL
+0B16: 21680D  	    LD      HL, LOAD_FILE_BUFFER            ; start of source, DE points to INPUT_BUFFER after "ADD "
+0B19: 22E80D  	    LD      (LOAD_FILE_BUFFER_POS), HL
               	
-0ADD:         	load_command_load_word_loop_continue:
-0ADD: 78      	    LD      A, B
-0ADE: FE51    	    CP      CURRENT_INPUT_MAX_LEN + 1       ; accommodate reading of EOF/null terminator
-0AE0: 2844    	    JR      Z, load_command_input_too_long
+0B1C:         	load_command_load_word_loop_continue:
+0B1C: 78      	    LD      A, B
+0B1D: FE51    	    CP      CURRENT_INPUT_MAX_LEN + 1       ; accommodate reading of EOF/null terminator
+0B1F: 2844    	    JR      Z, load_command_input_too_long
               	
-0AE2: 2AA80D  	    LD      HL, (LOAD_FILE_BUFFER_POS)
+0B21: 2AE80D  	    LD      HL, (LOAD_FILE_BUFFER_POS)
               	
-0AE5: 7E      	    LD      A, (HL)                         ; load character from file
+0B24: 7E      	    LD      A, (HL)                         ; load character from file
               	
-0AE6: B7      	    OR      A                               ; null terminator
-0AE7: 2820    	    JR      Z, load_command_load_word_done
+0B25: B7      	    OR      A                               ; null terminator
+0B26: 2820    	    JR      Z, load_command_load_word_done
               	
-0AE9: FE1A    	    CP      ASCII_EOF                       ; end of file
-0AEB: 281C    	    JR      Z, load_command_load_word_done
+0B28: FE1A    	    CP      ASCII_EOF                       ; end of file
+0B2A: 281C    	    JR      Z, load_command_load_word_done
               	
-0AED: FE0D    	    CP      ASCII_CR                        ; end of line is marked by CRLF
-0AEF: 200F    	    JR      NZ, load_command_load_word_copy_char
+0B2C: FE0D    	    CP      ASCII_CR                        ; end of line is marked by CRLF
+0B2E: 200F    	    JR      NZ, load_command_load_word_copy_char
               	
-0AF1: 23      	    INC     HL
-0AF2: 22A80D  	    LD      (LOAD_FILE_BUFFER_POS), HL
+0B30: 23      	    INC     HL
+0B31: 22E80D  	    LD      (LOAD_FILE_BUFFER_POS), HL
               	
-0AF5: 7E      	    LD      A, (HL)
+0B34: 7E      	    LD      A, (HL)
               	
-0AF6: FE0A    	    CP      ASCII_LF
-0AF8: 2042    	    JR      NZ, load_command_load_word_invalid_line_ending
+0B35: FE0A    	    CP      ASCII_LF
+0B37: 2042    	    JR      NZ, load_command_load_word_invalid_line_ending
               	
-0AFA: 23      	    INC     HL
-0AFB: 22A80D  	    LD      (LOAD_FILE_BUFFER_POS), HL
+0B39: 23      	    INC     HL
+0B3A: 22E80D  	    LD      (LOAD_FILE_BUFFER_POS), HL
               	
-0AFE: 1809    	    JR      load_command_load_word_done
+0B3D: 1809    	    JR      load_command_load_word_done
               	
-0B00:         	load_command_load_word_copy_char:
-0B00: 12      	    LD      (DE), A                         ; copy the character to the input buffer
+0B3F:         	load_command_load_word_copy_char:
+0B3F: 12      	    LD      (DE), A                         ; copy the character to the input buffer
               	
-0B01: 13      	    INC     DE                              ; move to the next
-0B02: 23      	    INC     HL
-0B03: 22A80D  	    LD      (LOAD_FILE_BUFFER_POS), HL
-0B06: 04      	    INC     B
+0B40: 13      	    INC     DE                              ; move to the next
+0B41: 23      	    INC     HL
+0B42: 22E80D  	    LD      (LOAD_FILE_BUFFER_POS), HL
+0B45: 04      	    INC     B
               	
-0B07: 18AB    	    JR      load_command_load_word_loop
+0B46: 18AB    	    JR      load_command_load_word_loop
               	
-0B09:         	load_command_load_word_done:
-0B09: 78      	    LD      A, B
+0B48:         	load_command_load_word_done:
+0B48: 78      	    LD      A, B
               	
-0B0A: FE04    	    CP      4                               ; length of "ADD ", i.e. blank line
-0B0C: 284A    	    JR      Z, load_command_EOF
+0B49: FE04    	    CP      4                               ; length of "ADD ", i.e. blank line
+0B4B: 284A    	    JR      Z, load_command_EOF
               	
-0B0E: 32270C  	    LD      (INPUT_BUFFER_COUNT), A
+0B4D: 32660C  	    LD      (INPUT_BUFFER_COUNT), A
               	
-0B11: 11280C  	    LD      DE, INPUT_BUFFER                ; echo it
-0B14: CD3A07  	    CALL    print
+0B50: 11670C  	    LD      DE, INPUT_BUFFER                ; echo it
+0B53: CD3E07  	    CALL    print
               	
-0B17: 3E0A    	    LD      A, ASCII_LF
-0B19: CD5407  	    CALL    print_char
+0B56: 3E0A    	    LD      A, ASCII_LF
+0B58: CD5807  	    CALL    print_char
               	
-0B1C:         	load_command_execute_add_command:
-0B1C: D9      	    EXX
+0B5B:         	load_command_execute_add_command:
+0B5B: D9      	    EXX
               	
-0B1D: CD8407  	    CALL    COPY_INPUT_TO_CURRENT_INPUT
-0B20: C49907  	    CALL    NZ, process_current_input
+0B5C: CD8807  	    CALL    COPY_INPUT_TO_CURRENT_INPUT
+0B5F: C4B307  	    CALL    NZ, process_current_input
               	
-0B23: D9      	    EXX
+0B62: D9      	    EXX
               	
-0B24: 1889    	    JR      load_command_load_word
+0B63: 1889    	    JR      load_command_load_word
               	
-0B26:         	load_command_input_too_long:
+0B65:         	load_command_input_too_long:
               	    .local
-0B26: 112D0B  	    LD      DE, ERROR
-0B29: CD3A07  	    CALL    print
-0B2C: C9      	    RET
-0B2D: 4C696E65	ERROR   DEFM    'Line too long.',0
-0B31: 20746F6F	
-0B35: 206C6F6E	
-0B39: 672E00  	
+0B65: 116C0B  	    LD      DE, ERROR
+0B68: CD3E07  	    CALL    print
+0B6B: C9      	    RET
+0B6C: 4C696E65	ERROR   DEFM    'Line too long.',0
+0B70: 20746F6F	
+0B74: 206C6F6E	
+0B78: 672E00  	
               	    .endlocal
               	
-0B3C:         	load_command_load_word_invalid_line_ending:
+0B7B:         	load_command_load_word_invalid_line_ending:
               	    .local
-0B3C: 11430B  	    LD      DE, ERROR
-0B3F: CD3A07  	    CALL    print
-0B42: C9      	    RET
-0B43: 496E7661	ERROR   DEFM    'Invalid line ending',0
-0B47: 6C696420	
-0B4B: 6C696E65	
-0B4F: 20656E64	
-0B53: 696E6700	
+0B7B: 11820B  	    LD      DE, ERROR
+0B7E: CD3E07  	    CALL    print
+0B81: C9      	    RET
+0B82: 496E7661	ERROR   DEFM    'Invalid line ending',0
+0B86: 6C696420	
+0B8A: 6C696E65	
+0B8E: 20656E64	
+0B92: 696E6700	
               	    .endlocal
               	
-0B57:         	load_command_failed:
-0B57: C9      	    RET
+0B96:         	load_command_failed:
+0B96: C9      	    RET
               	
-0B58:         	load_command_EOF:
-0B58:         	load_command_succeeded:
+0B97:         	load_command_EOF:
+0B97:         	load_command_succeeded:
               	
-0B58: C9      	    RET
+0B97: C9      	    RET
               	
-0B59:         	load_command_initialize_input_buffer:
-0B59: CD6207  	    CALL    clear_input_buffer
+0B98:         	load_command_initialize_input_buffer:
+0B98: CD6607  	    CALL    clear_input_buffer
               	
-0B5C:         	load_command_add_keyword_to_input_buffer:
+0B9B:         	load_command_add_keyword_to_input_buffer:
               	    .local
-0B5C: 21680B  	    LD      HL, KEYWORD
-0B5F: 11280C  	    LD      DE, INPUT_BUFFER
-0B62: 010400  	    LD      BC, 0x0004
-0B65: EDB0    	    LDIR
+0B9B: 21A70B  	    LD      HL, KEYWORD
+0B9E: 11670C  	    LD      DE, INPUT_BUFFER
+0BA1: 010400  	    LD      BC, 0x0004
+0BA4: EDB0    	    LDIR
               	
-0B67: C9      	    RET
-0B68: 41444420	KEYWORD DEFM    "ADD "
+0BA6: C9      	    RET
+0BA7: 41444420	KEYWORD DEFM    "ADD "
               	    .endlocal
               	    
               	    .include "command-processor/commands/save-command.asm"
@@ -1782,129 +1808,129 @@
               	;; OUT: -
               	;; MOD: A, DE, HL, IX
               	;; ==================================================================
-0B6C:         	save_command:
-0B6C: 117B01  	    LD      DE, NOT_IMPLEMENTED_NL
-0B6F: C33A07  	    JP      print
+0BAB:         	save_command:
+0BAB: 117B01  	    LD      DE, NOT_IMPLEMENTED_NL
+0BAE: C33E07  	    JP      print
               	
-0B72: CDA901  	    CALL    parse_file_name
+0BB1: CDA901  	    CALL    parse_file_name
               	
-0B75: B7      	    OR      A
-0B76: C0      	    RET     NZ                              ; error
+0BB4: B7      	    OR      A
+0BB5: C0      	    RET     NZ                              ; error
               	
-0B77:         	save_command_execute:
-0B77:         	save_command_prepare_index:                 ; create index of word list entries
-0B77: 2AAC0D  	    LD      HL, (WORD_LIST_NEXT)            ; start the index where the next new word would go
-0B7A: 11B20D  	    LD      DE, WORD_LIST_END               ; location of the end of the word list
-0B7D: 7323722B	    LD      (HL), DE                        ; write this end address as the first entry in the index
+0BB6:         	save_command_execute:
+0BB6:         	save_command_prepare_index:                 ; create index of word list entries
+0BB6: 2AEC0D  	    LD      HL, (WORD_LIST_NEXT)            ; start the index where the next new word would go
+0BB9: 11F20D  	    LD      DE, WORD_LIST_END               ; location of the end of the word list
+0BBC: 7323722B	    LD      (HL), DE                        ; write this end address as the first entry in the index
               	
-0B81: DD2AAA0D	    LD      IX, (WORD_LIST_HEAD)            ; start IX at the head of the word list
+0BC0: DD2AEA0D	    LD      IX, (WORD_LIST_HEAD)            ; start IX at the head of the word list
               	
-0B85: DD7E00  	    LD      A, (IX)
-0B88: B7      	    OR      A
-0B89: 201C    	    JR      NZ, save_command_prepare_index_loop
+0BC4: DD7E00  	    LD      A, (IX)
+0BC7: B7      	    OR      A
+0BC8: 201C    	    JR      NZ, save_command_prepare_index_loop
               	
               	    .local
-0B8B: 11920B  	    LD      DE, MESSAGE
-0B8E: CD3A07  	    CALL    PRINT
-0B91: C9      	    RET
+0BCA: 11D10B  	    LD      DE, MESSAGE
+0BCD: CD3E07  	    CALL    PRINT
+0BD0: C9      	    RET
               	
-0B92: 576F7264	MESSAGE DEFM    "Word list is empty.", 10, 0
-0B96: 206C6973	
-0B9A: 74206973	
-0B9E: 20656D70	
-0BA2: 74792E0A	
-0BA6: 00      	
+0BD1: 576F7264	MESSAGE DEFM    "Word list is empty.", 10, 0
+0BD5: 206C6973	
+0BD9: 74206973	
+0BDD: 20656D70	
+0BE1: 74792E0A	
+0BE5: 00      	
               	    .endlocal
               	
-0BA7:         	save_command_prepare_index_loop:
-0BA7: DD7E00  	    LD      A, (IX + 0)                     ; load the length of the word
-0BAA: B7      	    OR      A                               ; if 0, then end of word list reached
-0BAB: 2814    	    JR      Z, save_command_prepare_index_done
+0BE6:         	save_command_prepare_index_loop:
+0BE6: DD7E00  	    LD      A, (IX + 0)                     ; load the length of the word
+0BE9: B7      	    OR      A                               ; if 0, then end of word list reached
+0BEA: 2814    	    JR      Z, save_command_prepare_index_done
               	
-0BAD:         	save_command_prepare_index_write_address:
-0BAD: DDE5    	    PUSH    IX                              ; copy the address of the word list entry into DE
-0BAF: D1      	    POP     DE
+0BEC:         	save_command_prepare_index_write_address:
+0BEC: DDE5    	    PUSH    IX                              ; copy the address of the word list entry into DE
+0BEE: D1      	    POP     DE
               	
-0BB0: 23      	    INC     HL
-0BB1: 23      	    INC     HL
-0BB2: 7323722B	    LD      (HL), DE                        ; write the address of the word list entry to the index
+0BEF: 23      	    INC     HL
+0BF0: 23      	    INC     HL
+0BF1: 7323722B	    LD      (HL), DE                        ; write the address of the word list entry to the index
               	
-0BB6: DD5E01  	    LD      DE, (IX + 1)                    ; load the address of the next word list entry
-0BB9: DD5602  	
-0BBC: D5      	    PUSH    DE
-0BBD: DDE1    	    POP     IX                              ; copy it to IX
+0BF5: DD5E01  	    LD      DE, (IX + 1)                    ; load the address of the next word list entry
+0BF8: DD5602  	
+0BFB: D5      	    PUSH    DE
+0BFC: DDE1    	    POP     IX                              ; copy it to IX
               	
-0BBF: 18E6    	    JR      save_command_prepare_index_loop
+0BFE: 18E6    	    JR      save_command_prepare_index_loop
               	
-0BC1:         	save_command_prepare_index_done:
+0C00:         	save_command_prepare_index_done:
               	; HL now points to the last address in the index, the starting point for the write loop
-0BC1: 54      	    LD      D, H                            ; Set DE to point to the address after the index where the file output will be prepared
-0BC2: 5D      	    LD      E, L
-0BC3: 13      	    INC     DE
-0BC4: 13      	    INC     DE
+0C00: 54      	    LD      D, H                            ; Set DE to point to the address after the index where the file output will be prepared
+0C01: 5D      	    LD      E, L
+0C02: 13      	    INC     DE
+0C03: 13      	    INC     DE
               	
-0BC5: D5      	    PUSH    DE                              ; save DE (start of prepared file)
+0C04: D5      	    PUSH    DE                              ; save DE (start of prepared file)
               	
-0BC6:         	save_command_prepare_file_content_loop:
-0BC6: 4E23462B	    LD      BC, (HL)                        ; load the address of the word list entry
-0BCA: DD60DD69	    LD      IX, BC
+0C05:         	save_command_prepare_file_content_loop:
+0C05: 4E23462B	    LD      BC, (HL)                        ; load the address of the word list entry
+0C09: DD60DD69	    LD      IX, BC
               	
-0BCE: DD7E00  	    LD      A, (IX + 0)
-0BD1: B7      	    OR      A
-0BD2: 2819    	    JR      Z, save_command_prepare_file_content_done
+0C0D: DD7E00  	    LD      A, (IX + 0)
+0C10: B7      	    OR      A
+0C11: 2819    	    JR      Z, save_command_prepare_file_content_done
               	
-0BD4: E5      	    PUSH    HL                              ; save HL
+0C13: E5      	    PUSH    HL                              ; save HL
               	
-0BD5: DD6E03  	    LD      HL, (IX + 3)                    ; source address of the word, DE is the destination
-0BD8: DD6604  	
-0BDB: 0600    	    LD      B, 0x00
-0BDD: 4F      	    LD      C, A                            ; number of characters
+0C14: DD6E03  	    LD      HL, (IX + 3)                    ; source address of the word, DE is the destination
+0C17: DD6604  	
+0C1A: 0600    	    LD      B, 0x00
+0C1C: 4F      	    LD      C, A                            ; number of characters
               	
-0BDE: EDB0    	    LDIR                                    ; copy the word
+0C1D: EDB0    	    LDIR                                    ; copy the word
               	
-0BE0: 3E0D    	    LD      A, ASCII_CR                     ; append the CRLF
-0BE2: 12      	    LD      (DE), A
-0BE3: 13      	    INC     DE
-0BE4: 3E0A    	    LD      A, ASCII_LF
-0BE6: 12      	    LD      (DE), A
-0BE7: 13      	    INC     DE
+0C1F: 3E0D    	    LD      A, ASCII_CR                     ; append the CRLF
+0C21: 12      	    LD      (DE), A
+0C22: 13      	    INC     DE
+0C23: 3E0A    	    LD      A, ASCII_LF
+0C25: 12      	    LD      (DE), A
+0C26: 13      	    INC     DE
               	
-0BE8: E1      	    POP     HL                              ; restore HL
+0C27: E1      	    POP     HL                              ; restore HL
               	
-0BE9: 2B      	    DEC     HL                              ; back up to the previous index entry
-0BEA: 2B      	    DEC     HL
-0BEB: 18D9    	    JR      save_command_prepare_file_content_loop
+0C28: 2B      	    DEC     HL                              ; back up to the previous index entry
+0C29: 2B      	    DEC     HL
+0C2A: 18D9    	    JR      save_command_prepare_file_content_loop
               	
-0BED:         	save_command_prepare_file_content_done:
-0BED: 3E00    	    LD      A, 0x00                         ; append a null terminator
-0BEF: 12      	    LD      (DE), A
+0C2C:         	save_command_prepare_file_content_done:
+0C2C: 3E00    	    LD      A, 0x00                         ; append a null terminator
+0C2E: 12      	    LD      (DE), A
               	
-0BF0:         	save_command_save:
+0C2F:         	save_command_save:
               	
-0BF0: E1      	    POP     HL                              ; load HL with the start of the file content (previously pushed from DE)
+0C2F: E1      	    POP     HL                              ; load HL with the start of the file content (previously pushed from DE)
               	
-0BF1: CD5D03  	    CALL    save_file
+0C30: CD5D03  	    CALL    save_file
               	
-0BF4: F600    	    OR      A, 0
-0BF6: 2815    	    JR      Z, save_command_succeeded
+0C33: F600    	    OR      A, 0
+0C35: 2815    	    JR      Z, save_command_succeeded
               	
-0BF8:         	save_command_failed:
+0C37:         	save_command_failed:
               	    .local
-0BF8: 11FF0B  	    LD      DE, MESSAGE
-0BFB: CD3A07  	    CALL    PRINT
-0BFE: C9      	    RET
+0C37: 113E0C  	    LD      DE, MESSAGE
+0C3A: CD3E07  	    CALL    PRINT
+0C3D: C9      	    RET
               	
-0BFF: 53617665	MESSAGE DEFM    "Save failed.", 10, 0
-0C03: 20666169	
-0C07: 6C65642E	
-0C0B: 0A00    	
+0C3E: 53617665	MESSAGE DEFM    "Save failed.", 10, 0
+0C42: 20666169	
+0C46: 6C65642E	
+0C4A: 0A00    	
               	    .endlocal
               	
-0C0D:         	save_command_succeeded:
-0C0D: 115E01  	    LD      DE, INPUT_OK_NL
-0C10: CD3A07  	    CALL    PRINT
+0C4C:         	save_command_succeeded:
+0C4C: 115E01  	    LD      DE, INPUT_OK_NL
+0C4F: CD3E07  	    CALL    PRINT
               	
-0C13: C9      	    RET
+0C52: C9      	    RET
               	    
               	    .include "command-processor/commands/quit-command.asm"
               	;; ==================================================================
@@ -1916,48 +1942,51 @@
               	;;           character in CURRENT_INPUT
               	;; MOD: A, B, DE, HL
               	;; ==========================================================
-0C14:         	quit_command:
-0C14: 2ACA0C  	    LD      HL, (CURRENT_INPUT_POS)         ; check that no further input was specified
-0C17: 7E      	    LD      A, (HL)
-0C18: B7      	    OR      A
-0C19: 2807    	    JR      Z, quit_command_execute
+0C53:         	quit_command:
+0C53: 2A0A0D  	    LD      HL, (CURRENT_INPUT_POS)         ; check that no further input was specified
+0C56: 7E      	    LD      A, (HL)
+0C57: B7      	    OR      A
+0C58: 2807    	    JR      Z, quit_command_execute
               	
-0C1B:         	quit_command_syntax_error:
-0C1B: 116B01  	    LD      DE, SYNTAX_ERROR_NL
-0C1E: CD3A07  	    CALL    print
+0C5A:         	quit_command_syntax_error:
+0C5A: 116B01  	    LD      DE, SYNTAX_ERROR_NL
+0C5D: CD3E07  	    CALL    print
               	
-0C21: C9      	    RET
+0C60: C9      	    RET
               	
-0C22:         	quit_command_execute:
-0C22: E1      	    POP     HL
-0C23: C32101  	    JP      main_done
+0C61:         	quit_command_execute:
+0C61: E1      	    POP     HL
+0C62: C32101  	    JP      main_done
               	    
               	
-0C26:         	DATA_BASE                  DEFL    $
+0C65:         	DATA_BASE                   DEFL    $
               	
-0C26: 00      	INPUT_BUFFER_SIZE          DEFB    0
-0C27: 00      	INPUT_BUFFER_COUNT         DEFB    0
-0C28: 00000000	INPUT_BUFFER               DEFS    (CURRENT_INPUT_MAX_LEN + 1), 0 ; null-terminated
-0C2C: 00...   	
+0C65: 00      	INPUT_BUFFER_SIZE           DEFB    0
+0C66: 00      	INPUT_BUFFER_COUNT          DEFB    0
+0C67: 00000000	INPUT_BUFFER                DEFS    (CURRENT_INPUT_MAX_LEN + 1), 0 ; null-terminated
+0C6B: 00...   	
               	
-0C79: 00000000	CURRENT_INPUT              DEFS    (CURRENT_INPUT_MAX_LEN + 1), 0 ; null-terminated
-0C7D: 00...   	
-0CCA: 0000    	CURRENT_INPUT_POS          DEFW    0
+0CB8: 00000000	CURRENT_INPUT               DEFS    (CURRENT_INPUT_MAX_LEN), 0
+0CBC: 00...   	
+0D08: 00      	CURRENT_INPUT_LEN           DEFB    0
+0D09: 00      	CURRENT_INPUT_REMAINING_LEN DEFB    0
+0D0A: 0000    	CURRENT_INPUT_POS           DEFW    0
               	
-0CCC: 00000000	CURRENT_TOKEN              DEFS    (CURRENT_INPUT_MAX_LEN + 1), 0 ; null-terminated
-0CD0: 00...   	
+0D0C: 00      	CURRENT_TOKEN_LEN           DEFB    0
+0D0D: 00000000	CURRENT_TOKEN               DEFS    (CURRENT_INPUT_MAX_LEN), 0
+0D11: 00...   	
               	
-0D1D: 00000000	PARSED_FILE_NAME           DEFS    8, 0
-0D21: 00000000	
-0D25: 000000  	PARSED_FILE_EXT            DEFS    3, 0
+0D5D: 00000000	PARSED_FILE_NAME            DEFS    8, 0
+0D61: 00000000	
+0D65: 000000  	PARSED_FILE_EXT             DEFS    3, 0
               	
-0D28: 00000000	LOAD_FILE_BUFFER           DEFS    128,0
-0D2C: 00...   	
-0DA8: 0000    	LOAD_FILE_BUFFER_POS       DEFW    0
+0D68: 00000000	LOAD_FILE_BUFFER            DEFS    128,0
+0D6C: 00...   	
+0DE8: 0000    	LOAD_FILE_BUFFER_POS        DEFW    0
               	
               	; this must be the last one:
-0DAA: B20D    	WORD_LIST_HEAD:            DEFW    WORD_LIST_END   ; points to the last word added
-0DAC: B30D    	WORD_LIST_NEXT:            DEFW    WORD_LIST_END + 1 ; points to where the next new word will be stored
+0DEA: F20D    	WORD_LIST_HEAD:             DEFW    WORD_LIST_END   ; points to the last word added
+0DEC: F30D    	WORD_LIST_NEXT:             DEFW    WORD_LIST_END + 1 ; points to where the next new word will be stored
               	
               	; Structure:
               	;LENGTH: DEFB    3
@@ -1965,28 +1994,28 @@
               	;THIS:   DEFW    WORD
               	;WORD:   DEFM    "Abc", 0
               	
-0DAE: 0000    	WORD_LIST_CHECKPOINT_HEAD: DEFW    0x0000
-0DB0: 0000    	WORD_LIST_CHECKPOINT_NEXT: DEFW    0x0000
+0DEE: 0000    	WORD_LIST_CHECKPOINT_HEAD:  DEFW    0x0000
+0DF0: 0000    	WORD_LIST_CHECKPOINT_NEXT:  DEFW    0x0000
               	
-0DB2: 00      	WORD_LIST_END:             DEFB    0
+0DF2: 00      	WORD_LIST_END:              DEFB    0
               	    
 
 
 ; +++ segments +++
 
-#CODE          = $0100 =   256,  size = $0CB3 =  3251
+#CODE          = $0100 =   256,  size = $0CF3 =  3315
 
 ; +++ global symbols +++
 
-_end                                   = $0DB3 =  3507          bforth2.asm:1 (unused)
-_size                                  = $0CB3 =  3251          bforth2.asm:1 (unused)
+_end                                   = $0DF3 =  3571          bforth2.asm:1 (unused)
+_size                                  = $0CF3 =  3315          bforth2.asm:1 (unused)
 _z80_                                  = $0001 =     1          bforth2.asm:1 (unused)
-add_command                            = $0867 =  2151          add-command.asm:7
-add_command_def                        = $04F4 =  1268          command-list.asm:24
-add_command_done                       = $08B8 =  2232          add-command.asm:63
-add_command_syntax_error               = $08B1 =  2225          add-command.asm:57
-add_command_update_word_list_pointers  = $08A5 =  2213          add-command.asm:50 (unused)
-add_command_write_word_text            = $087B =  2171          add-command.asm:22 (unused)
+add_command                            = $08A6 =  2214          add-command.asm:7
+add_command_def                        = $04F8 =  1272          command-list.asm:24
+add_command_done                       = $08F7 =  2295          add-command.asm:63
+add_command_syntax_error               = $08F0 =  2288          add-command.asm:57
+add_command_update_word_list_pointers  = $08E4 =  2276          add-command.asm:50 (unused)
+add_command_write_word_text            = $08BA =  2234          add-command.asm:22 (unused)
 ascii_a_lower                          = $0061 =    97          ascii.asm:12
 ascii_cr                               = $000D =    13          ascii.asm:5
 ascii_eof                              = $001A =    26          ascii.asm:6
@@ -1999,41 +2028,44 @@ ascii_tab                              = $0009 =     9          ascii.asm:1
 ascii_vt                               = $000B =    11          ascii.asm:3
 ascii_z_lower_plus_one                 = $007B =   123          ascii.asm:13
 bdos                                   = $0005 =     5          bdos.asm:1
-checkpoint_command                     = $09CF =  2511          checkpoint-command.asm:7
-checkpoint_command_def                 = $05D3 =  1491          command-list.asm:80
-checkpoint_command_done                = $09EF =  2543          checkpoint-command.asm:28 (unused)
-checkpoint_command_execute             = $09E3 =  2531          checkpoint-command.asm:22
-checkpoint_command_syntax_error        = $09DC =  2524          checkpoint-command.asm:16 (unused)
-clear_command                          = $0A4F =  2639          clear-command.asm:7
-clear_command_def                      = $06D5 =  1749          command-list.asm:136
-clear_command_done                     = $0A7B =  2683          clear-command.asm:31 (unused)
-clear_command_execute                  = $0A63 =  2659          clear-command.asm:22
-clear_command_syntax_error             = $0A5C =  2652          clear-command.asm:16 (unused)
-clear_input_buffer                     = $0762 =  1890          clear-input-buffer.cpm.asm:7
-clear_screen                           = $0729 =  1833          clear-screen.cpm.asm:7
-clear_screen_seq                       = $0732 =  1842          clear-screen.cpm.asm:14
+checkpoint_command                     = $0A0E =  2574          checkpoint-command.asm:7
+checkpoint_command_def                 = $05D7 =  1495          command-list.asm:80
+checkpoint_command_done                = $0A2E =  2606          checkpoint-command.asm:28 (unused)
+checkpoint_command_execute             = $0A22 =  2594          checkpoint-command.asm:22
+checkpoint_command_syntax_error        = $0A1B =  2587          checkpoint-command.asm:16 (unused)
+clear_command                          = $0A8E =  2702          clear-command.asm:7
+clear_command_def                      = $06D9 =  1753          command-list.asm:136
+clear_command_done                     = $0ABA =  2746          clear-command.asm:31 (unused)
+clear_command_execute                  = $0AA2 =  2722          clear-command.asm:22
+clear_command_syntax_error             = $0A9B =  2715          clear-command.asm:16 (unused)
+clear_input_buffer                     = $0766 =  1894          clear-input-buffer.cpm.asm:7
+clear_screen                           = $072D =  1837          clear-screen.cpm.asm:7
+clear_screen_seq                       = $0736 =  1846          clear-screen.cpm.asm:14
 command_description                    = $0007 =     7          command-list.asm:7
 command_keyword                        = $0003 =     3          command-list.asm:5
 command_keyword_len                    = $0002 =     2          command-list.asm:4
-command_list                           = $04C7 =  1223          command-list.asm:1
-command_list_end                       = $0726 =  1830          command-list.asm:164
+command_list                           = $04CB =  1227          command-list.asm:1
+command_list_end                       = $072A =  1834          command-list.asm:164
 command_method_address                 = $0009 =     9          command-list.asm:8
 command_next_command                   = $0000 =     0          command-list.asm:3
 command_syntax                         = $0005 =     5          command-list.asm:6
-copy_input_to_current_input            = $0784 =  1924          copy-input-buffer-to-current-input.asm:8
-copy_input_to_current_input_restore_null = $0795 =  1941          copy-input-buffer-to-current-input.asm:21
-current_input                          = $0C79 =  3193          bforth2.asm:71
+copy_input_to_current_input            = $0788 =  1928          copy-input-buffer-to-current-input.asm:7
+copy_input_to_current_input_done       = $07B2 =  1970          copy-input-buffer-to-current-input.asm:31
+current_input                          = $0CB8 =  3256          bforth2.asm:71
+current_input_len                      = $0D08 =  3336          bforth2.asm:72
 current_input_max_len                  = $0050 =    80          constants.asm:2
-current_input_pos                      = $0CCA =  3274          bforth2.asm:72
-current_token                          = $0CCC =  3276          bforth2.asm:74
-data_base                              = $0C26 =  3110          bforth2.asm:65 (unused)
-dump_command                           = $0990 =  2448          dump-command.asm:7
-dump_command_def                       = $05AB =  1451          command-list.asm:66
-dump_command_done                      = $09C8 =  2504          dump-command.asm:44
-dump_command_execute                   = $09A4 =  2468          dump-command.asm:22
-dump_command_loop                      = $09A8 =  2472          dump-command.asm:25
-dump_command_next_command              = $09BD =  2493          dump-command.asm:37 (unused)
-dump_command_syntax_error              = $099D =  2461          dump-command.asm:16 (unused)
+current_input_pos                      = $0D0A =  3338          bforth2.asm:74
+current_input_remaining_len            = $0D09 =  3337          bforth2.asm:73 (unused)
+current_token                          = $0D0D =  3341          bforth2.asm:77
+current_token_len                      = $0D0C =  3340          bforth2.asm:76
+data_base                              = $0C65 =  3173          bforth2.asm:65 (unused)
+dump_command                           = $09CF =  2511          dump-command.asm:7
+dump_command_def                       = $05AF =  1455          command-list.asm:66
+dump_command_done                      = $0A07 =  2567          dump-command.asm:44
+dump_command_execute                   = $09E3 =  2531          dump-command.asm:22
+dump_command_loop                      = $09E7 =  2535          dump-command.asm:25
+dump_command_next_command              = $09FC =  2556          dump-command.asm:37 (unused)
+dump_command_syntax_error              = $09DC =  2524          dump-command.asm:16 (unused)
 f_close                                = $0010 =    16          bdos.asm:8
 f_console_out                          = $0002 =     2          bdos.asm:2
 f_delete                               = $0013 =    19          bdos.asm:9
@@ -2043,61 +2075,61 @@ f_open                                 = $000F =    15          bdos.asm:3
 f_read                                 = $0014 =    20          bdos.asm:4
 f_write                                = $0015 =    21          bdos.asm:7
 fill_memory                            = $018E =   398          fill-memory.asm:11
-find_command                           = $08BF =  2239          find-command.asm:7
-find_command_def                       = $052B =  1323          command-list.asm:38
-find_command_done                      = $0937 =  2359          find-command.asm:82
-find_command_execute                   = $08D3 =  2259          find-command.asm:22 (unused)
-find_command_loop                      = $08D7 =  2263          find-command.asm:25
-find_command_loop_match_character      = $08EA =  2282          find-command.asm:38
-find_command_method_address            = $07BC =  1980          find-command-method-address.asm:8
-find_command_method_address_check_command = $07C0 =  1984          find-command-method-address.asm:12
-find_command_method_address_compare    = $07C9 =  1993          find-command-method-address.asm:20 (unused)
-find_command_method_address_compare_loop = $07D3 =  2003          find-command-method-address.asm:25
-find_command_method_address_compare_next_character = $07E2 =  2018          find-command-method-address.asm:36
-find_command_method_address_found      = $07E7 =  2023          find-command-method-address.asm:42 (unused)
-find_command_method_address_next_command = $07D7 =  2007          find-command-method-address.asm:30
-find_command_method_address_not_found  = $07F1 =  2033          find-command-method-address.asm:48
-find_command_next_word                 = $08F5 =  2293          find-command.asm:51
-find_command_syntax_error              = $0900 =  2304          find-command.asm:58
-find_command_word_found                = $0907 =  2311          find-command.asm:64
-find_command_word_not_found            = $091D =  2333          find-command.asm:73
-help_command                           = $0819 =  2073          help-command.asm:7
-help_command_def                       = $04C7 =  1223          command-list.asm:10 (unused)
-help_command_done                      = $0860 =  2144          help-command.asm:48
-help_command_execute                   = $082D =  2093          help-command.asm:22
-help_command_loop                      = $0831 =  2097          help-command.asm:25
-help_command_next_command              = $0855 =  2133          help-command.asm:42 (unused)
-help_command_syntax_error              = $0826 =  2086          help-command.asm:16 (unused)
+find_command                           = $08FE =  2302          find-command.asm:7
+find_command_def                       = $052F =  1327          command-list.asm:38
+find_command_done                      = $0976 =  2422          find-command.asm:82
+find_command_execute                   = $0912 =  2322          find-command.asm:22 (unused)
+find_command_loop                      = $0916 =  2326          find-command.asm:25
+find_command_loop_match_character      = $0929 =  2345          find-command.asm:38
+find_command_method_address            = $07D7 =  2007          find-command-method-address.asm:8
+find_command_method_address_check_command = $07DF =  2015          find-command-method-address.asm:13
+find_command_method_address_compare    = $07E8 =  2024          find-command-method-address.asm:21 (unused)
+find_command_method_address_compare_loop = $07F2 =  2034          find-command-method-address.asm:26
+find_command_method_address_compare_next_character = $0801 =  2049          find-command-method-address.asm:37
+find_command_method_address_found      = $0806 =  2054          find-command-method-address.asm:43 (unused)
+find_command_method_address_next_command = $07F6 =  2038          find-command-method-address.asm:31
+find_command_method_address_not_found  = $0810 =  2064          find-command-method-address.asm:49
+find_command_next_word                 = $0934 =  2356          find-command.asm:51
+find_command_syntax_error              = $093F =  2367          find-command.asm:58
+find_command_word_found                = $0946 =  2374          find-command.asm:64
+find_command_word_not_found            = $095C =  2396          find-command.asm:73
+help_command                           = $0858 =  2136          help-command.asm:7
+help_command_def                       = $04CB =  1227          command-list.asm:10 (unused)
+help_command_done                      = $089F =  2207          help-command.asm:48
+help_command_execute                   = $086C =  2156          help-command.asm:22
+help_command_loop                      = $0870 =  2160          help-command.asm:25
+help_command_next_command              = $0894 =  2196          help-command.asm:42 (unused)
+help_command_syntax_error              = $0865 =  2149          help-command.asm:16 (unused)
 help_prompt_nl                         = $0136 =   310          text.asm:2
 help_syntax_description_delimiter      = $0167 =   359          text.asm:7
-input_buffer                           = $0C28 =  3112          bforth2.asm:69
-input_buffer_count                     = $0C27 =  3111          bforth2.asm:68
+input_buffer                           = $0C67 =  3175          bforth2.asm:69
+input_buffer_count                     = $0C66 =  3174          bforth2.asm:68
 input_buffer_max_len                   = $0050 =    80          constants.asm:1
-input_buffer_size                      = $0C26 =  3110          bforth2.asm:67
+input_buffer_size                      = $0C65 =  3173          bforth2.asm:67
 input_not_recognized_nl                = $0162 =   354          text.asm:5
 input_ok_nl                            = $015E =   350          text.asm:4
 input_prompt_sp                        = $015B =   347          text.asm:3
 is_whitespace                          = $0196 =   406          is-whitespace.asm:9
-load_command                           = $0A82 =  2690          load-command.asm:8
-load_command_add_keyword_to_input_buffer = $0B5C =  2908          load-command.asm:166 (unused)
-load_command_def                       = $065B =  1627          command-list.asm:108
-load_command_eof                       = $0B58 =  2904          load-command.asm:158
-load_command_execute                   = $0A8F =  2703          load-command.asm:17 (unused)
-load_command_execute_add_command       = $0B1C =  2844          load-command.asm:129 (unused)
-load_command_failed                    = $0B57 =  2903          load-command.asm:155
-load_command_fetch_first_buffer        = $0A96 =  2710          load-command.asm:22 (unused)
-load_command_initialize_input_buffer   = $0B59 =  2905          load-command.asm:163
-load_command_input_too_long            = $0B26 =  2854          load-command.asm:139
-load_command_load_fetch_next_buffer    = $0AC0 =  2752          load-command.asm:53 (unused)
-load_command_load_word                 = $0AAF =  2735          load-command.asm:39
-load_command_load_word_copy_char       = $0B00 =  2816          load-command.asm:105
-load_command_load_word_done            = $0B09 =  2825          load-command.asm:115
-load_command_load_word_invalid_line_ending = $0B3C =  2876          load-command.asm:147
-load_command_load_word_loop            = $0AB4 =  2740          load-command.asm:44
-load_command_load_word_loop_continue   = $0ADD =  2781          load-command.asm:74
-load_command_succeeded                 = $0B58 =  2904          load-command.asm:159 (unused)
-load_file_buffer                       = $0D28 =  3368          bforth2.asm:79
-load_file_buffer_pos                   = $0DA8 =  3496          bforth2.asm:80
+load_command                           = $0AC1 =  2753          load-command.asm:8
+load_command_add_keyword_to_input_buffer = $0B9B =  2971          load-command.asm:166 (unused)
+load_command_def                       = $065F =  1631          command-list.asm:108
+load_command_eof                       = $0B97 =  2967          load-command.asm:158
+load_command_execute                   = $0ACE =  2766          load-command.asm:17 (unused)
+load_command_execute_add_command       = $0B5B =  2907          load-command.asm:129 (unused)
+load_command_failed                    = $0B96 =  2966          load-command.asm:155
+load_command_fetch_first_buffer        = $0AD5 =  2773          load-command.asm:22 (unused)
+load_command_initialize_input_buffer   = $0B98 =  2968          load-command.asm:163
+load_command_input_too_long            = $0B65 =  2917          load-command.asm:139
+load_command_load_fetch_next_buffer    = $0AFF =  2815          load-command.asm:53 (unused)
+load_command_load_word                 = $0AEE =  2798          load-command.asm:39
+load_command_load_word_copy_char       = $0B3F =  2879          load-command.asm:105
+load_command_load_word_done            = $0B48 =  2888          load-command.asm:115
+load_command_load_word_invalid_line_ending = $0B7B =  2939          load-command.asm:147
+load_command_load_word_loop            = $0AF3 =  2803          load-command.asm:44
+load_command_load_word_loop_continue   = $0B1C =  2844          load-command.asm:74
+load_command_succeeded                 = $0B97 =  2967          load-command.asm:159 (unused)
+load_file_buffer                       = $0D68 =  3432          bforth2.asm:82
+load_file_buffer_pos                   = $0DE8 =  3560          bforth2.asm:83
 load_file_fcb                          = $02A5 =   677          load-file-prepare.asm:51
 load_file_fcb_cr                       = $02C5 =   709          load-file-prepare.asm:58 (unused)
 load_file_fcb_ex                       = $02B1 =   689          load-file-prepare.asm:54 (unused)
@@ -2116,7 +2148,7 @@ load_file_prepare_initialize           = $0226 =   550          load-file-prepar
 load_file_prepare_open                 = $024F =   591          load-file-prepare.asm:28 (unused)
 load_file_prepare_success              = $02A2 =   674          load-file-prepare.asm:47
 load_file_prepare_write_buffer         = $02C9 =   713          load-file-prepare.asm:61 (unused)
-load_input_buffer                      = $076E =  1902          load-input-buffer.cpm.asm:14
+load_input_buffer                      = $0772 =  1906          load-input-buffer.cpm.asm:14
 main_done                              = $0121 =   289          bforth2.asm:24
 main_entry                             = $0100 =   256          bforth2.asm:3 (unused)
 main_prompt_input_echo_loop            = $010F =   271          bforth2.asm:11
@@ -2131,50 +2163,50 @@ parse_file_name_parse_extension_loop   = $01EA =   490          parse-file-name.
 parse_file_name_parse_filename_loop    = $01CD =   461          parse-file-name.asm:30
 parse_file_name_parse_filename_period_found = $01E0 =   480          parse-file-name.asm:51
 parse_file_name_syntax_error           = $0200 =   512          parse-file-name.asm:87
-parse_token                            = $07F5 =  2037          parse-token.asm:12
-parse_token_copy_character             = $0809 =  2057          parse-token.asm:28 (unused)
-parse_token_copy_token_loop            = $0800 =  2048          parse-token.asm:20
-parse_token_done                       = $0818 =  2072          parse-token.asm:45 (unused)
-parse_token_end_of_input               = $080F =  2063          parse-token.asm:37
-parse_token_end_of_token               = $080F =  2063          parse-token.asm:38
-parsed_file_ext                        = $0D25 =  3365          bforth2.asm:77
-parsed_file_name                       = $0D1D =  3357          bforth2.asm:76
-print                                  = $073A =  1850          print.cpm.asm:8
-print_char                             = $0754 =  1876          print-char.cpm.asm:8
-print_find_null_terminator_loop        = $0741 =  1857          print.cpm.asm:17
-process_current_input                  = $0799 =  1945          process-current-input.asm:11
-process_current_input_command_not_recognized = $07AD =  1965          process-current-input.asm:25 (unused)
-process_current_input_command_recognized = $07BA =  1978          process-current-input.asm:32
-process_current_input_done             = $07BB =  1979          process-current-input.asm:36 (unused)
-prompt                                 = $075B =  1883          prompt.cpm.asm:7
-quit_command                           = $0C14 =  3092          quit-command.asm:10
-quit_command_def                       = $0700 =  1792          command-list.asm:150
-quit_command_execute                   = $0C22 =  3106          quit-command.asm:22
-quit_command_syntax_error              = $0C1B =  3099          quit-command.asm:16 (unused)
-remove_command                         = $093E =  2366          remove-command.asm:7
-remove_command_def                     = $0564 =  1380          command-list.asm:52
-remove_command_done                    = $0989 =  2441          remove-command.asm:45
-remove_command_execute                 = $0952 =  2386          remove-command.asm:21 (unused)
-remove_command_syntax_error            = $0964 =  2404          remove-command.asm:30
-remove_command_word_list_is_empty      = $096B =  2411          remove-command.asm:36
-rollback_command                       = $09F6 =  2550          rollback-command.asm:7
-rollback_command_def                   = $061B =  1563          command-list.asm:94
-rollback_command_done                  = $0A48 =  2632          rollback-command.asm:53
-rollback_command_execute               = $0A0F =  2575          rollback-command.asm:26
-rollback_command_no_checkpoint         = $0A26 =  2598          rollback-command.asm:38
-rollback_command_syntax_error          = $0A41 =  2625          rollback-command.asm:47
-save_command                           = $0B6C =  2924          save-command.asm:7
-save_command_def                       = $0698 =  1688          command-list.asm:122
-save_command_execute                   = $0B77 =  2935          save-command.asm:16 (unused)
-save_command_failed                    = $0BF8 =  3064          save-command.asm:106 (unused)
-save_command_prepare_file_content_done = $0BED =  3053          save-command.asm:93
-save_command_prepare_file_content_loop = $0BC6 =  3014          save-command.asm:64
-save_command_prepare_index             = $0B77 =  2935          save-command.asm:17 (unused)
-save_command_prepare_index_done        = $0BC1 =  3009          save-command.asm:55
-save_command_prepare_index_loop        = $0BA7 =  2983          save-command.asm:36
-save_command_prepare_index_write_address = $0BAD =  2989          save-command.asm:41 (unused)
-save_command_save                      = $0BF0 =  3056          save-command.asm:97 (unused)
-save_command_succeeded                 = $0C0D =  3085          save-command.asm:115
+parse_token                            = $0814 =  2068          parse-token.asm:8
+parse_token_copy_token_loop            = $0843 =  2115          parse-token.asm:36
+parse_token_done                       = $0857 =  2135          parse-token.asm:54 (unused)
+parse_token_end_of_input               = $0854 =  2132          parse-token.asm:50
+parse_token_end_of_token               = $0854 =  2132          parse-token.asm:51
+parse_token_skip_whitespace            = $0831 =  2097          parse-token.asm:21
+parsed_file_ext                        = $0D65 =  3429          bforth2.asm:80
+parsed_file_name                       = $0D5D =  3421          bforth2.asm:79
+print                                  = $073E =  1854          print.cpm.asm:8
+print_char                             = $0758 =  1880          print-char.cpm.asm:8
+print_find_null_terminator_loop        = $0745 =  1861          print.cpm.asm:17
+process_current_input                  = $07B3 =  1971          process-current-input.asm:11
+process_current_input_command_not_recognized = $07C8 =  1992          process-current-input.asm:26 (unused)
+process_current_input_command_recognized = $07D5 =  2005          process-current-input.asm:33
+process_current_input_done             = $07D6 =  2006          process-current-input.asm:37
+prompt                                 = $075F =  1887          prompt.cpm.asm:7
+quit_command                           = $0C53 =  3155          quit-command.asm:10
+quit_command_def                       = $0704 =  1796          command-list.asm:150
+quit_command_execute                   = $0C61 =  3169          quit-command.asm:22
+quit_command_syntax_error              = $0C5A =  3162          quit-command.asm:16 (unused)
+remove_command                         = $097D =  2429          remove-command.asm:7
+remove_command_def                     = $0568 =  1384          command-list.asm:52
+remove_command_done                    = $09C8 =  2504          remove-command.asm:45
+remove_command_execute                 = $0991 =  2449          remove-command.asm:21 (unused)
+remove_command_syntax_error            = $09A3 =  2467          remove-command.asm:30
+remove_command_word_list_is_empty      = $09AA =  2474          remove-command.asm:36
+rollback_command                       = $0A35 =  2613          rollback-command.asm:7
+rollback_command_def                   = $061F =  1567          command-list.asm:94
+rollback_command_done                  = $0A87 =  2695          rollback-command.asm:53
+rollback_command_execute               = $0A4E =  2638          rollback-command.asm:26
+rollback_command_no_checkpoint         = $0A65 =  2661          rollback-command.asm:38
+rollback_command_syntax_error          = $0A80 =  2688          rollback-command.asm:47
+save_command                           = $0BAB =  2987          save-command.asm:7
+save_command_def                       = $069C =  1692          command-list.asm:122
+save_command_execute                   = $0BB6 =  2998          save-command.asm:16 (unused)
+save_command_failed                    = $0C37 =  3127          save-command.asm:106 (unused)
+save_command_prepare_file_content_done = $0C2C =  3116          save-command.asm:93
+save_command_prepare_file_content_loop = $0C05 =  3077          save-command.asm:64
+save_command_prepare_index             = $0BB6 =  2998          save-command.asm:17 (unused)
+save_command_prepare_index_done        = $0C00 =  3072          save-command.asm:55
+save_command_prepare_index_loop        = $0BE6 =  3046          save-command.asm:36
+save_command_prepare_index_write_address = $0BEC =  3052          save-command.asm:41 (unused)
+save_command_save                      = $0C2F =  3119          save-command.asm:97 (unused)
+save_command_succeeded                 = $0C4C =  3148          save-command.asm:115
 save_file                              = $035D =   861          save-file.asm:7
 save_file_content                      = $03FB =  1019          save-file.asm:104
 save_file_error                        = $03E1 =   993          save-file.asm:89
@@ -2193,21 +2225,21 @@ save_file_initialize                   = $035D =   861          save-file.asm:8 
 save_file_success                      = $03F8 =  1016          save-file.asm:100
 save_file_write                        = $0381 =   897          save-file.asm:26 (unused)
 save_file_write_buffer                 = $0421 =  1057          save-file.asm:115
-skip_whitespace                        = $04A1 =  1185          skip-whitespace.asm:9
+skip_whitespace                        = $04A1 =  1185          skip-whitespace.asm:9 (unused)
 skip_whitespace_done                   = $04AD =  1197          skip-whitespace.asm:21
 skip_whitespace_loop                   = $04A1 =  1185          skip-whitespace.asm:10
 syntax_error_nl                        = $016B =   363          text.asm:8
 text_greeting_nl                       = $0122 =   290          text.asm:1
-to_uppercase                           = $04AE =  1198          to-uppercase.asm:7
-to_uppercase_done                      = $04C5 =  1221          to-uppercase.asm:32
-to_uppercase_loop                      = $04AF =  1199          to-uppercase.asm:10
-to_uppercase_next_character            = $04C2 =  1218          to-uppercase.asm:28
-to_uppercase_process_character         = $04B3 =  1203          to-uppercase.asm:15 (unused)
-word_list_checkpoint_head              = $0DAE =  3502          bforth2.asm:92
-word_list_checkpoint_next              = $0DB0 =  3504          bforth2.asm:93
-word_list_end                          = $0DB2 =  3506          bforth2.asm:95
-word_list_head                         = $0DAA =  3498          bforth2.asm:83
-word_list_next                         = $0DAC =  3500          bforth2.asm:84
+to_uppercase                           = $04AE =  1198          to-uppercase.asm:9
+to_uppercase_done                      = $04C8 =  1224          to-uppercase.asm:38
+to_uppercase_loop                      = $04B0 =  1200          to-uppercase.asm:13
+to_uppercase_next_character            = $04C4 =  1220          to-uppercase.asm:33
+to_uppercase_process_character         = $04B5 =  1205          to-uppercase.asm:20 (unused)
+word_list_checkpoint_head              = $0DEE =  3566          bforth2.asm:95
+word_list_checkpoint_next              = $0DF0 =  3568          bforth2.asm:96
+word_list_end                          = $0DF2 =  3570          bforth2.asm:98
+word_list_head                         = $0DEA =  3562          bforth2.asm:86
+word_list_next                         = $0DEC =  3564          bforth2.asm:87
 
 ; +++ local symbols +++
 
@@ -2223,106 +2255,106 @@ message = $03EA =  1002          save-file.asm:97
 
 ; +++ local symbols +++
 
-description = $04DB =  1243          command-list.asm:21
-keyword     = $04D2 =  1234          command-list.asm:19
-syntax      = $04D6 =  1238          command-list.asm:20
+description = $04DF =  1247          command-list.asm:21
+keyword     = $04D6 =  1238          command-list.asm:19
+syntax      = $04DA =  1242          command-list.asm:20
 
 ; +++ local symbols +++
 
-description = $050D =  1293          command-list.asm:35
-keyword     = $04FF =  1279          command-list.asm:33
-syntax      = $0502 =  1282          command-list.asm:34
+description = $0511 =  1297          command-list.asm:35
+keyword     = $0503 =  1283          command-list.asm:33
+syntax      = $0506 =  1286          command-list.asm:34
 
 ; +++ local symbols +++
 
-description = $0546 =  1350          command-list.asm:49
-keyword     = $0536 =  1334          command-list.asm:47
-syntax      = $053A =  1338          command-list.asm:48
+description = $054A =  1354          command-list.asm:49
+keyword     = $053A =  1338          command-list.asm:47
+syntax      = $053E =  1342          command-list.asm:48
 
 ; +++ local symbols +++
 
-description = $057C =  1404          command-list.asm:63
-keyword     = $056F =  1391          command-list.asm:61
-syntax      = $0575 =  1397          command-list.asm:62
+description = $0580 =  1408          command-list.asm:63
+keyword     = $0573 =  1395          command-list.asm:61
+syntax      = $0579 =  1401          command-list.asm:62
 
 ; +++ local symbols +++
 
-description = $05BF =  1471          command-list.asm:77
-keyword     = $05B6 =  1462          command-list.asm:75
-syntax      = $05BA =  1466          command-list.asm:76
+description = $05C3 =  1475          command-list.asm:77
+keyword     = $05BA =  1466          command-list.asm:75
+syntax      = $05BE =  1470          command-list.asm:76
 
 ; +++ local symbols +++
 
-description = $05F3 =  1523          command-list.asm:91
-keyword     = $05DE =  1502          command-list.asm:89
-syntax      = $05E8 =  1512          command-list.asm:90
+description = $05F7 =  1527          command-list.asm:91
+keyword     = $05E2 =  1506          command-list.asm:89
+syntax      = $05EC =  1516          command-list.asm:90
 
 ; +++ local symbols +++
 
-description = $0637 =  1591          command-list.asm:105
-keyword     = $0626 =  1574          command-list.asm:103
-syntax      = $062E =  1582          command-list.asm:104
+description = $063B =  1595          command-list.asm:105
+keyword     = $062A =  1578          command-list.asm:103
+syntax      = $0632 =  1586          command-list.asm:104
 
 ; +++ local symbols +++
 
-description = $067A =  1658          command-list.asm:119
-keyword     = $0666 =  1638          command-list.asm:117
-syntax      = $066A =  1642          command-list.asm:118
+description = $067E =  1662          command-list.asm:119
+keyword     = $066A =  1642          command-list.asm:117
+syntax      = $066E =  1646          command-list.asm:118
 
 ; +++ local symbols +++
 
-description = $06B7 =  1719          command-list.asm:133
-keyword     = $06A3 =  1699          command-list.asm:131
-syntax      = $06A7 =  1703          command-list.asm:132
+description = $06BB =  1723          command-list.asm:133
+keyword     = $06A7 =  1703          command-list.asm:131
+syntax      = $06AB =  1707          command-list.asm:132
 
 ; +++ local symbols +++
 
-description = $06EB =  1771          command-list.asm:147
-keyword     = $06E0 =  1760          command-list.asm:145
-syntax      = $06E5 =  1765          command-list.asm:146
+description = $06EF =  1775          command-list.asm:147
+keyword     = $06E4 =  1764          command-list.asm:145
+syntax      = $06E9 =  1769          command-list.asm:146
 
 ; +++ local symbols +++
 
-description = $0714 =  1812          command-list.asm:161
-keyword     = $070B =  1803          command-list.asm:159
-syntax      = $070F =  1807          command-list.asm:160
+description = $0718 =  1816          command-list.asm:161
+keyword     = $070F =  1807          command-list.asm:159
+syntax      = $0713 =  1811          command-list.asm:160
 
 ; +++ local symbols +++
 
-message = $0910 =  2320          find-command.asm:70
+message = $094F =  2383          find-command.asm:70
 
 ; +++ local symbols +++
 
-message = $0926 =  2342          find-command.asm:79
+message = $0965 =  2405          find-command.asm:79
 
 ; +++ local symbols +++
 
-message = $0974 =  2420          remove-command.asm:42
+message = $09B3 =  2483          remove-command.asm:42
 
 ; +++ local symbols +++
 
-message = $0A2D =  2605          rollback-command.asm:44
+message = $0A6C =  2668          rollback-command.asm:44
 
 ; +++ local symbols +++
 
-error   = $0B2D =  2861          load-command.asm:144
+error   = $0B6C =  2924          load-command.asm:144
 
 ; +++ local symbols +++
 
-error   = $0B43 =  2883          load-command.asm:152
+error   = $0B82 =  2946          load-command.asm:152
 
 ; +++ local symbols +++
 
-keyword = $0B68 =  2920          load-command.asm:174
+keyword = $0BA7 =  2983          load-command.asm:174
 
 ; +++ local symbols +++
 
-message = $0B92 =  2962          save-command.asm:33
+message = $0BD1 =  3025          save-command.asm:33
 
 ; +++ local symbols +++
 
-message = $0BFF =  3071          save-command.asm:112
+message = $0C3E =  3134          save-command.asm:112
 
 
-total time: 0.0448 sec.
+total time: 0.0297 sec.
 no errors
