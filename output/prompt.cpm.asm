@@ -2,11 +2,18 @@
 ;; Outputs the input prompt
 ;; IN:  -
 ;; OUT: -
-;; MOD: DE
+;; MOD: DE, BC
 ;; ==========================================================
 prompt
-    LD      DE, INPUT_PROMPT_SP
+    .local
+    LD      DE, INPUT_PROMPT
+    LD      BC, 0x02
+    CALL    push_string
+
     CALL    print
 
     RET
+
+INPUT_PROMPT        DEFM    "> "
+    .endlocal
     

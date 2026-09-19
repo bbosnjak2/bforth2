@@ -1,6 +1,8 @@
     org     $0100
 
 main_entry:
+    CALL    reset_stack
+
     CALL    clear_screen
 
     LD      DE, TEXT_GREETING_NL
@@ -48,6 +50,10 @@ main_done:
 
     .include "input/copy-input-buffer-to-current-input.asm"
 
+    .include "stack/data-types.asm"
+    .include "stack/reset-stack.asm"
+    .include "stack/push-string.asm"
+
     .include "command-processor/process-current-input.asm"
     .include "command-processor/parse-token.asm"
     .include "command-processor/commands/help-command.asm"
@@ -63,6 +69,9 @@ main_done:
     .include "command-processor/commands/quit-command.asm"
 
 DATA_BASE                   DEFL    $
+
+STACK_BASE                  DEFW    0
+STACK_POINTER               DEFW    0
 
 INPUT_BUFFER_SIZE           DEFB    0
 INPUT_BUFFER_COUNT          DEFB    0
