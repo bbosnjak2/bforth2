@@ -20,6 +20,6 @@ quit_command_syntax_error:
     RET
 
 quit_command_execute:
-    POP     HL
+    POP     HL                              ; pop the return address of the quit command
     JP      main_done
     

@@ -19,9 +19,9 @@ push_string:
     LD      (HL), STACK_STRING_TYPE
     INC     HL
 
-    LD      (HL), B
-    INC     HL
     LD      (HL), C
+    INC     HL
+    LD      (HL), B
     INC     HL
 
     EX      DE, HL

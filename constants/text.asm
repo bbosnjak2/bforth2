@@ -1,5 +1,7 @@
-TEXT_GREETING_NL                  DEFM    "Welcome to bforth2", 10, 0
+TEXT_GREETING_NL                  DEFM    "Welcome to bforth2", 10
+TEXT_GREETING_NL_LEN              .equ    $ - TEXT_GREETING_NL
 HELP_PROMPT_NL                    DEFM    "Type 'help' for A list of commands.", 10, 0
+HELP_PROMPT_NL_LEN                .equ    $ - HELP_PROMPT_NL
 INPUT_PROMPT_SP                   DEFM    "> ", 0
 INPUT_OK_NL                       DEFM    "OK", 10, 0
 INPUT_NOT_RECOGNIZED_NL           DEFM    "?",10,0

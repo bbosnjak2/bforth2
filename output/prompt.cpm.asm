@@ -6,11 +6,11 @@
 ;; ==========================================================
 prompt
     .local
-    LD      DE, INPUT_PROMPT
-    LD      BC, 0x02
+    LD      DE, INPUT_PROMPT                ; content
+    LD      BC, 0x02                        ; length
     CALL    push_string
 
-    CALL    print
+    CALL    dot
 
     RET
 

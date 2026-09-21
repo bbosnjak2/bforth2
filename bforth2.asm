@@ -6,12 +6,19 @@ main_entry:
     CALL    clear_screen
 
     LD      DE, TEXT_GREETING_NL
-    CALL    print
+    LD      BC, TEXT_GREETING_NL_LEN
+    CALL    push_string
+    CALL    dot
+
     LD      DE, HELP_PROMPT_NL
-    CALL    print
+    LD      BC, HELP_PROMPT_NL_LEN
+    CALL    push_string
+    CALL    dot
 
 main_prompt_input_echo_loop:
     CALL    prompt
+
+    RET
 
     CALL    load_input_buffer
 
@@ -53,6 +60,10 @@ main_done:
     .include "stack/data-types.asm"
     .include "stack/reset-stack.asm"
     .include "stack/push-string.asm"
+    .include "stack/pop-stack.asm"
+    .include "stack/stack-concatenate.asm"
+
+    .include "output/dot.asm"
 
     .include "command-processor/process-current-input.asm"
     .include "command-processor/parse-token.asm"

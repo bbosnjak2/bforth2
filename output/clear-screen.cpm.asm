@@ -5,16 +5,21 @@
 ;; MOD: C, E
 ;; ==========================================================
 clear_screen
-    LD      DE, CLEAR_SCREEN_SEQ
-    LD      C, $09
-    CALL    $0005
+    .local
+    LD      DE, CLEAR_SCREEN_SEQ            ; content
+    LD      BC, CLEAR_SCREEN_SEQ_END - CLEAR_SCREEN_SEQ ; length
+    CALL    push_string
+
+    CALL    dot
 
     RET
 
-CLEAR_SCREEN_SEQ    DEFL    $
+CLEAR_SCREEN_SEQ     DEFL    $
     .byte   27
     .ascii  "[2J"
     .byte   27
     .ascii  "[H"
-    .ascii  "$"
+
+CLEAR_SCREEN_SEQ_END DEFL    $
+    .endlocal
     
