@@ -5,15 +5,8 @@ main_entry:
 
     CALL    clear_screen
 
-    LD      DE, TEXT_GREETING_NL
-    LD      BC, TEXT_GREETING_NL_LEN
-    CALL    push_string
-    CALL    dot
+    CALL    print_greeting
 
-    LD      DE, HELP_PROMPT_NL
-    LD      BC, HELP_PROMPT_NL_LEN
-    CALL    push_string
-    CALL    dot
 
 main_prompt_input_echo_loop:
     CALL    prompt
@@ -51,6 +44,7 @@ main_done:
     .include "output/print.cpm.asm"
     .include "output/print-char.cpm.asm"
     .include "output/prompt.cpm.asm"
+    .include "output/print-greeting.asm"
 
     .include "input/clear-input-buffer.cpm.asm"
     .include "input/load-input-buffer.cpm.asm"

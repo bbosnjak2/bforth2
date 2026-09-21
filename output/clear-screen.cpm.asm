@@ -7,7 +7,7 @@
 clear_screen
     .local
     LD      DE, CLEAR_SCREEN_SEQ            ; content
-    LD      BC, CLEAR_SCREEN_SEQ_END - CLEAR_SCREEN_SEQ ; length
+    LD      BC, CLEAR_SCREEN_SEQ_LEN        ; length
     CALL    push_string
 
     CALL    dot
@@ -20,6 +20,6 @@ CLEAR_SCREEN_SEQ     DEFL    $
     .byte   27
     .ascii  "[H"
 
-CLEAR_SCREEN_SEQ_END DEFL    $
+CLEAR_SCREEN_SEQ_LEN .equ    $ - CLEAR_SCREEN_SEQ
     .endlocal
     
