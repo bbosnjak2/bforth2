@@ -4,7 +4,7 @@
 ;; OUT:
 ;; MOD:
 ;; ==========================================================
-reset_stack:
+RESET_STACK
     LD      HL, 0                           ; effectively load the SP value into HL
     ADD     HL, SP                          ; SP is from top of memory
 

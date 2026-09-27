@@ -1,15 +1,13 @@
     org     $0100
 
 main_entry:
-    CALL    reset_stack
-
-    CALL    clear_screen
-
-    CALL    print_greeting
+    CALL    RESET_STACK
+    CALL    CLEAR_SCREEN
+    CALL    PRINT_GREETING
 
 
 main_prompt_input_echo_loop:
-    CALL    prompt
+    CALL    PROMPT
 
     RET
 
@@ -26,10 +24,13 @@ main_prompt_input_echo_loop:
 main_done:
     RET
 
+    .include "bdos/bdos.constants.asm"
+    .include "bdos/bdos-print-string.asm"
+
     .include "constants/ascii.asm"
-    .include "constants/bdos.asm"
     .include "constants/text.asm"
     .include "input/constants.asm"
+
     .include "util/fill-memory.asm"
     .include "util/is-whitespace.asm"
     .include "util/parse-file-name.asm"
@@ -40,11 +41,16 @@ main_done:
     .include "util/to-uppercase.asm"
     .include "command-processor/command-list.asm"
 
-    .include "output/clear-screen.cpm.asm"
+    .include "dictionary/CLEAR-SCREEN.asm"
+    .include "dictionary/DOT.asm"
+    .include "dictionary/HELP-PROMPT-TEXT.asm"
+    .include "dictionary/PRINT-GREETING.asm"
+    .include "dictionary/PROMPT.asm"
+    .include "dictionary/RESET-STACK.asm"
+    .include "dictionary/WELCOME-TEXT.asm"
+
     .include "output/print.cpm.asm"
     .include "output/print-char.cpm.asm"
-    .include "output/prompt.cpm.asm"
-    .include "output/print-greeting.asm"
 
     .include "input/clear-input-buffer.cpm.asm"
     .include "input/load-input-buffer.cpm.asm"
@@ -52,12 +58,9 @@ main_done:
     .include "input/copy-input-buffer-to-current-input.asm"
 
     .include "stack/data-types.asm"
-    .include "stack/reset-stack.asm"
     .include "stack/push-string.asm"
     .include "stack/pop-stack.asm"
     .include "stack/stack-concatenate.asm"
-
-    .include "output/dot.asm"
 
     .include "command-processor/process-current-input.asm"
     .include "command-processor/parse-token.asm"

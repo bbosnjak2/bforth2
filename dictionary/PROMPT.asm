@@ -4,13 +4,13 @@
 ;; OUT: -
 ;; MOD: DE, BC
 ;; ==========================================================
-prompt
+PROMPT
     .local
     LD      DE, INPUT_PROMPT                ; content
     LD      BC, INPUT_PROMPT_LEN            ; length
     CALL    push_string
 
-    CALL    dot
+    CALL    DOT
 
     RET
 

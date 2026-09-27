@@ -4,13 +4,13 @@
 ;; OUT: -
 ;; MOD: C, E
 ;; ==========================================================
-clear_screen
+CLEAR_SCREEN
     .local
     LD      DE, CLEAR_SCREEN_SEQ            ; content
     LD      BC, CLEAR_SCREEN_SEQ_LEN        ; length
     CALL    push_string
 
-    CALL    dot
+    CALL    DOT
 
     RET
 

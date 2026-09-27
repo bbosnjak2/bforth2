@@ -4,11 +4,11 @@
 ;; OUT:
 ;; MOD:
 ;; ==========================================================
-dot:
+DOT
     LD      HL, (STACK_BASE)
     LD      DE, (STACK_POINTER)
     SBC     HL, DE
-    JR      NZ, dot_push_terminator
+    JR      NZ, DOT_push_terminator
 
     .local
     LD      DE, ERROR
@@ -18,27 +18,26 @@ dot:
 ERROR      DEFM    "Stack is empty.\n", "$"
     .endlocal
 
-dot_push_terminator:
+DOT_push_terminator:
     .local
     LD      DE, TERMINATOR                  ; content
     LD      BC, 0x01                        ; length
     CALL    push_string
-    JR      dot_concatenate
+    JR      DOT_concatenate
 
 TERMINATOR DEFM    "$"
     .endlocal
 
-dot_concatenate:
+DOT_concatenate:
     CALL    stack_concatenate
 
-dot_print:
+DOT_print:
     LD      DE, (STACK_POINTER)
     INC     DE                              ; type byte
     INC     DE                              ; length word
     INC     DE
 
-    LD      C, $09                          ; invoke the CPM print method
-    CALL    $0005
+    CALL    bdos_print_string
 
     CALL    pop_stack
 
