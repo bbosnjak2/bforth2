@@ -9,7 +9,7 @@ load_file_prepare_initialize:
     LD      HL, load_file_FCB               ; reset the FCB
     LD      BC, load_file_FCB_size
     LD      A, 0
-    CALL    fill_memory
+    CALL    system_fill_memory
 
     LD      HL, PARSED_FILE_NAME            ; set the file name
     LD      DE, load_file_FCB_NAME

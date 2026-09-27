@@ -8,7 +8,7 @@
 ;;      BC - 0x00
 ;; MOD: DE, HL, BC
 ;; ===============================================================
-fill_memory:
+system_fill_memory:
     LD      (HL), A                         ; set the first location
     DEC     BC
 

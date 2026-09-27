@@ -8,7 +8,7 @@ copy_input_to_current_input:
     LD      HL, CURRENT_INPUT
     LD      BC, CURRENT_INPUT_MAX_LEN
     LD      A, 0x00
-    CALL    fill_memory
+    CALL    system_fill_memory
 
     LD      IX, CURRENT_INPUT_LEN
 

@@ -11,7 +11,7 @@ save_file_initialize:
     LD      HL, save_file_FCB               ; reset the FCB
     LD      BC, save_file_FCB_size
     LD      A, 0
-    CALL    fill_memory
+    CALL    system_fill_memory
 
     LD      HL, PARSED_FILE_NAME            ; set the file name
     LD      DE, save_file_FCB_NAME
@@ -42,7 +42,7 @@ save_file_fill_buffer:
     LD      HL, save_file_write_buffer      ; blank out the buffer
     LD      BC, 128d
     LD      A, ASCII_EOF
-    CALL    fill_memory
+    CALL    system_fill_memory
 
     LD      HL, (save_file_content)         ; initialize pointers
     LD      DE, save_file_write_buffer

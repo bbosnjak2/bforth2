@@ -161,7 +161,7 @@ load_command_succeeded:
     RET
 
 load_command_initialize_input_buffer:
-    CALL    clear_input_buffer
+    CALL    system_clear_input_buffer
 
 load_command_add_keyword_to_input_buffer:
     .local

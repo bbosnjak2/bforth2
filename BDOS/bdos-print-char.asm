@@ -1,11 +1,11 @@
 ;; ==========================================================
-;; Prints the string to the console
-;; IN:  DE - location of $-delimited string
+;; Prints a character to the console
+;; IN:  E - the character
 ;; OUT:
 ;; MOD:
 ;; ==========================================================
-bdos_print_string
-    LD      C, F_PRINT_STRING
+bdos_print_char
+    LD      C, F_CONSOLE_OUT
     CALL    BDOS
 
     RET

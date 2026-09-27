@@ -10,7 +10,7 @@ load_file_fetch_initialize:
     LD      HL, LOAD_FILE_BUFFER            ; reset the buffer
     LD      BC, 128d
     LD      A, 0
-    CALL    fill_memory
+    CALL    system_fill_memory
 
 load_file_fetch_read:
     LD      C, F_READ

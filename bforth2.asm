@@ -8,10 +8,9 @@ main_entry:
 
 main_prompt_input_echo_loop:
     CALL    PROMPT
+    CALL    system_load_input_buffer
 
     RET
-
-    CALL    load_input_buffer
 
     CALL    copy_input_to_current_input
 
@@ -25,13 +24,14 @@ main_done:
     RET
 
     .include "bdos/bdos.constants.asm"
+    .include "bdos/bdos-line-input.asm"
+    .include "bdos/bdos-print-char.asm"
     .include "bdos/bdos-print-string.asm"
 
     .include "constants/ascii.asm"
     .include "constants/text.asm"
     .include "input/constants.asm"
 
-    .include "util/fill-memory.asm"
     .include "util/is-whitespace.asm"
     .include "util/parse-file-name.asm"
     .include "util/load-file-prepare.asm"
@@ -52,8 +52,9 @@ main_done:
     .include "output/print.cpm.asm"
     .include "output/print-char.cpm.asm"
 
-    .include "input/clear-input-buffer.cpm.asm"
-    .include "input/load-input-buffer.cpm.asm"
+    .include "system/system-clear-input-buffer.asm"
+    .include "system/system-fill-memory.asm"
+    .include "system/system-load-input-buffer.asm"
 
     .include "input/copy-input-buffer-to-current-input.asm"
 

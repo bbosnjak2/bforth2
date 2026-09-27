@@ -20,7 +20,7 @@ parse_file_name_initialize:
     LD      HL, PARSED_FILE_NAME            ; initialize the results to fill with spaces
     LD      A, ASCII_SPACE
     LD      BC, 0x000B                      ; 8 + 3
-    CALL    fill_memory
+    CALL    system_fill_memory
 
     LD      HL, CURRENT_TOKEN
     CALL    TO_UPPERCASE
