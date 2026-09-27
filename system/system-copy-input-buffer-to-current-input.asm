@@ -4,7 +4,7 @@
 ;; OUT: -
 ;; MOD: A, DE, HL, BC
 ;; ==========================================================
-copy_input_to_current_input:
+system_copy_input_to_current_input:
     LD      HL, CURRENT_INPUT
     LD      BC, CURRENT_INPUT_MAX_LEN
     LD      A, 0x00
@@ -24,10 +24,10 @@ copy_input_to_current_input:
     LD      (IX+1), C                       ; CURRENT_INPUT_REMAINING_LEN
 
     OR      A                               ; skip if nothing was input
-    JR      Z, copy_input_to_current_input_done
+    JR      Z, system_copy_input_to_current_input_done
 
     LDIR                                    ; copy
 
-copy_input_to_current_input_done:
+system_copy_input_to_current_input_done:
     RET
     

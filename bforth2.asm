@@ -9,14 +9,11 @@ main_entry:
 main_prompt_input_echo_loop:
     CALL    PROMPT
     CALL    system_load_input_buffer
+    CALL    system_copy_input_to_current_input
 
-    RET
-
-    CALL    copy_input_to_current_input
-
-    LD      A, (CURRENT_INPUT)
-    OR      A
-    CALL    NZ, process_current_input
+    ; LD      A, (CURRENT_INPUT)
+    ; OR      A
+    ; CALL    NZ, process_current_input
 
     JR      main_prompt_input_echo_loop
 
@@ -30,7 +27,6 @@ main_done:
 
     .include "constants/ascii.asm"
     .include "constants/text.asm"
-    .include "input/constants.asm"
 
     .include "util/is-whitespace.asm"
     .include "util/parse-file-name.asm"
@@ -53,10 +49,9 @@ main_done:
     .include "output/print-char.cpm.asm"
 
     .include "system/system-clear-input-buffer.asm"
+    .include "system/system-copy-input-buffer-to-current-input.asm"
     .include "system/system-fill-memory.asm"
     .include "system/system-load-input-buffer.asm"
-
-    .include "input/copy-input-buffer-to-current-input.asm"
 
     .include "stack/data-types.asm"
     .include "stack/push-string.asm"
@@ -82,10 +77,12 @@ DATA_BASE                   DEFL    $
 STACK_BASE                  DEFW    0
 STACK_POINTER               DEFW    0
 
+INPUT_BUFFER_MAX_LEN        equ     80d
 INPUT_BUFFER_SIZE           DEFB    0
 INPUT_BUFFER_COUNT          DEFB    0
 INPUT_BUFFER                DEFS    (CURRENT_INPUT_MAX_LEN + 1), 0 ; null-terminated
 
+CURRENT_INPUT_MAX_LEN       equ     INPUT_BUFFER_MAX_LEN
 CURRENT_INPUT               DEFS    (CURRENT_INPUT_MAX_LEN), 0
 CURRENT_INPUT_LEN           DEFB    0
 CURRENT_INPUT_REMAINING_LEN DEFB    0

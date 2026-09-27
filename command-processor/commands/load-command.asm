@@ -129,7 +129,7 @@ load_command_load_word_done:
 load_command_execute_add_command:
     EXX
 
-    CALL    COPY_INPUT_TO_CURRENT_INPUT
+    CALL    system_copy_input_to_current_input
     CALL    NZ, process_current_input
 
     EXX
