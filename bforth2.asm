@@ -3,11 +3,8 @@
 main_entry:
     CALL    START
 
-
 main_prompt_input_echo_loop:
-    CALL    PROMPT
-    CALL    system_load_input_buffer
-    CALL    system_copy_input_to_current_input
+    CALL    INLINE
 
 ; LD      A, (CURRENT_INPUT)
 ; OR      A
@@ -38,6 +35,7 @@ main_done:
     .include "dictionary/CLEAR-SCREEN.asm"
     .include "dictionary/DOT.asm"
     .include "dictionary/HELP-PROMPT-TEXT.asm"
+    .include "dictionary/INLINE.asm"
     .include "dictionary/PRINT-GREETING.asm"
     .include "dictionary/PROMPT.asm"
     .include "dictionary/RESET-STACK.asm"
