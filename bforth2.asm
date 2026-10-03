@@ -1,9 +1,7 @@
     org     $0100
 
 main_entry:
-    CALL    RESET_STACK
-    CALL    CLEAR_SCREEN
-    CALL    PRINT_GREETING
+    CALL    START
 
 
 main_prompt_input_echo_loop:
@@ -11,9 +9,9 @@ main_prompt_input_echo_loop:
     CALL    system_load_input_buffer
     CALL    system_copy_input_to_current_input
 
-    ; LD      A, (CURRENT_INPUT)
-    ; OR      A
-    ; CALL    NZ, process_current_input
+; LD      A, (CURRENT_INPUT)
+; OR      A
+; CALL    NZ, process_current_input
 
     JR      main_prompt_input_echo_loop
 
@@ -43,6 +41,7 @@ main_done:
     .include "dictionary/PRINT-GREETING.asm"
     .include "dictionary/PROMPT.asm"
     .include "dictionary/RESET-STACK.asm"
+    .include "dictionary/START.asm"
     .include "dictionary/WELCOME-TEXT.asm"
 
     .include "output/print.cpm.asm"
