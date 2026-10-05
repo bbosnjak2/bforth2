@@ -8,7 +8,7 @@ find_command:
     LD      DE, NOT_IMPLEMENTED_NL
     JP      print
 
-    CALL    parse_token
+;; CALL    parse_token
 
     LD      A, B                            ; check if a word was specified
     OR      A

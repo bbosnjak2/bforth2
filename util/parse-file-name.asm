@@ -5,7 +5,7 @@
 ;; MOD: A, DE, HL, IX
 ;; ==================================================================
 parse_file_name:
-    CALL    parse_token
+;; CALL    parse_token
 
     LD      A, B                            ; check if a word was specified
     OR      A

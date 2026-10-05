@@ -9,7 +9,7 @@
 ;; MOD: A, B, DE, HL
 ;; ==================================================================
 process_current_input:
-    CALL    parse_token                     ; parse command (copy to CURRENT_TOKEN, upper-case it, determine length)
+;; CALL    parse_token                    ; parse command (copy to CURRENT_TOKEN, upper-case it, determine length)
 
     LD      HL, CURRENT_TOKEN
     LD      A, (CURRENT_TOKEN_LEN)

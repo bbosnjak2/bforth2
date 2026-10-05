@@ -24,6 +24,10 @@ push_string:
     LD      (HL), B
     INC     HL
 
+    LD      A, B
+    OR      C
+    RET     Z                               ; zero-length string
+
     EX      DE, HL
     LDIR
 

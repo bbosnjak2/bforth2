@@ -6,11 +6,24 @@ main_entry:
 main_prompt_input_echo_loop:
     CALL    INLINE
 
+main_prompt_parse_tokens:
+    CALL    TOKEN
+
+    CALL    CLEAR
+
+    JR      Z, main_null_token
+
+    CALL    DOT
+    JR      main_prompt_parse_tokens
+
 ; LD      A, (CURRENT_INPUT)
 ; OR      A
 ; CALL    NZ, process_current_input
 
     JR      main_prompt_input_echo_loop
+
+main_null_token:
+    CALL    pop_stack
 
 main_done:
     RET
@@ -32,6 +45,7 @@ main_done:
     .include "util/to-uppercase.asm"
     .include "command-processor/command-list.asm"
 
+    .include "dictionary/CLEAR.asm"
     .include "dictionary/CLEAR-SCREEN.asm"
     .include "dictionary/DOT.asm"
     .include "dictionary/HELP-PROMPT-TEXT.asm"
@@ -40,6 +54,7 @@ main_done:
     .include "dictionary/PROMPT.asm"
     .include "dictionary/RESET-STACK.asm"
     .include "dictionary/START.asm"
+    .include "dictionary/TOKEN.asm"
     .include "dictionary/WELCOME-TEXT.asm"
 
     .include "output/print.cpm.asm"
@@ -56,7 +71,7 @@ main_done:
     .include "stack/stack-concatenate.asm"
 
     .include "command-processor/process-current-input.asm"
-    .include "command-processor/parse-token.asm"
+;;    .include "command-processor/parse-token.asm"
     .include "command-processor/commands/help-command.asm"
     .include "command-processor/commands/add-command.asm"
     .include "command-processor/commands/find-command.asm"
@@ -84,9 +99,6 @@ CURRENT_INPUT               DEFS    (CURRENT_INPUT_MAX_LEN), 0
 CURRENT_INPUT_LEN           DEFB    0
 CURRENT_INPUT_REMAINING_LEN DEFB    0
 CURRENT_INPUT_POS           DEFW    0
-
-CURRENT_TOKEN_LEN           DEFB    0
-CURRENT_TOKEN               DEFS    (CURRENT_INPUT_MAX_LEN), 0
 
 PARSED_FILE_NAME            DEFS    8, 0
 PARSED_FILE_EXT             DEFS    3, 0
