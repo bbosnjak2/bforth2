@@ -13,11 +13,24 @@ main_prompt_parse_tokens:
 
     JR      Z, main_null_token
 
+    CALL    SEARCH                          ; if found, Z = true and token is replaced by the address
+
+    JR      Z, main_prompt_execute_command
+
+    CALL    OK                              ; token received to top of stack
     JR      main_prompt_parse_tokens
+
+main_prompt_execute_command:
+    POP     HL                              ; command address
+
+    LD      DE, main_prompt_parse_tokens
+    PUSH    DE                              ; set the RET address
+
+    JP      HL                              ; execute the command
 
 main_null_token:
     CALL    pop_stack
-    CALL    OK
+;;    CALL    OK
     JR      main_prompt_input_echo_loop
 
 main_done:
@@ -45,10 +58,12 @@ main_done:
     .include "dictionary/DOT.asm"
     .include "dictionary/HELP-PROMPT-TEXT.asm"
     .include "dictionary/INLINE.asm"
+    .include "dictionary/NEWLINE.asm"
     .include "dictionary/OK.asm"
     .include "dictionary/PRINT-GREETING.asm"
     .include "dictionary/PROMPT.asm"
     .include "dictionary/RESET-STACK.asm"
+    .include "dictionary/SEARCH.asm"
     .include "dictionary/START.asm"
     .include "dictionary/TOKEN.asm"
     .include "dictionary/WELCOME-TEXT.asm"
@@ -66,8 +81,7 @@ main_done:
     .include "stack/pop-stack.asm"
     .include "stack/stack-concatenate.asm"
 
-    .include "command-processor/process-current-input.asm"
-;;    .include "command-processor/parse-token.asm"
+;; .include "command-processor/process-current-input.asm"
     .include "command-processor/commands/help-command.asm"
     .include "command-processor/commands/add-command.asm"
     .include "command-processor/commands/find-command.asm"

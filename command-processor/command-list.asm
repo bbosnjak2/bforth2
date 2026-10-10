@@ -5,7 +5,8 @@ COMMAND_KEYWORD_LEN = COMMAND_NEXT_COMMAND + 2
 COMMAND_KEYWORD = COMMAND_KEYWORD_LEN + 1
 COMMAND_SYNTAX = COMMAND_KEYWORD + 2
 COMMAND_DESCRIPTION = COMMAND_SYNTAX + 2
-COMMAND_METHOD_ADDRESS = COMMAND_DESCRIPTION + 2
+COMMAND_DESCRIPTION_LEN = COMMAND_DESCRIPTION + 2
+COMMAND_METHOD_ADDRESS = COMMAND_DESCRIPTION_LEN + 2
 
 HELP_COMMAND_DEF:
     .local
@@ -14,11 +15,13 @@ HELP_COMMAND_DEF:
                  DEFW    KEYWORD
                  DEFW    SYNTAX
                  DEFW    DESCRIPTION
+                 DEFW    DESCRIPTION_LEN
                  DEFW    help_command
 
 KEYWORD:         DEFM    "HELP"
-SYNTAX:          DEFM    "help", 0
-DESCRIPTION:     DEFM    "List available commands.", 0
+SYNTAX:          DEFM    "HELP"
+DESCRIPTION:     DEFM    "List available commands."
+DESCRIPTION_LEN  .equ    $ - DESCRIPTION
     .endlocal
 
 ADD_COMMAND_DEF:
@@ -28,11 +31,13 @@ ADD_COMMAND_DEF:
                  DEFW    KEYWORD
                  DEFW    SYNTAX
                  DEFW    DESCRIPTION
+                 DEFW    DESCRIPTION_LEN
                  DEFW    add_command
 
 KEYWORD:         DEFM    "ADD"
-SYNTAX:          DEFM    "add <word>", 0
-DESCRIPTION:     DEFM    "Adds A word to the word list.", 0
+SYNTAX:          DEFM    "ADD <word>"
+DESCRIPTION:     DEFM    "Adds A word to the word list."
+DESCRIPTION_LEN  .equ    $ - DESCRIPTION
     .endlocal
 
 FIND_COMMAND_DEF:
@@ -42,11 +47,13 @@ FIND_COMMAND_DEF:
                  DEFW    KEYWORD
                  DEFW    SYNTAX
                  DEFW    DESCRIPTION
+                 DEFW    DESCRIPTION_LEN
                  DEFW    find_command
 
 KEYWORD:         DEFM    "FIND"
-SYNTAX:          DEFM    "find <word>", 0
-DESCRIPTION:     DEFM    "Find A word in the word list.", 0
+SYNTAX:          DEFM    "FIND <word>"
+DESCRIPTION:     DEFM    "Find A word in the word list."
+DESCRIPTION_LEN  .equ    $ - DESCRIPTION
     .endlocal
 
 REMOVE_COMMAND_DEF:
@@ -56,11 +63,13 @@ REMOVE_COMMAND_DEF:
                  DEFW    KEYWORD
                  DEFW    SYNTAX
                  DEFW    DESCRIPTION
+                 DEFW    DESCRIPTION_LEN
                  DEFW    remove_command
 
 KEYWORD:         DEFM    "REMOVE"
-SYNTAX:          DEFM    "remove", 0
-DESCRIPTION:     DEFM    "Remove the last added word from the word list.", 0
+SYNTAX:          DEFM    "REMOVE"
+DESCRIPTION:     DEFM    "Remove the last added word from the word list."
+DESCRIPTION_LEN  .equ    $ - DESCRIPTION
     .endlocal
 
 DUMP_COMMAND_DEF:
@@ -70,11 +79,13 @@ DUMP_COMMAND_DEF:
                  DEFW    KEYWORD
                  DEFW    SYNTAX
                  DEFW    DESCRIPTION
+                 DEFW    DESCRIPTION_LEN
                  DEFW    dump_command
 
 KEYWORD:         DEFM    "DUMP"
-SYNTAX:          DEFM    "dump", 0
-DESCRIPTION:     DEFM    "Dump the word list.", 0
+SYNTAX:          DEFM    "DUMP"
+DESCRIPTION:     DEFM    "Dump the word list."
+DESCRIPTION_LEN  .equ    $ - DESCRIPTION
     .endlocal
 
 CHECKPOINT_COMMAND_DEF:
@@ -84,11 +95,13 @@ CHECKPOINT_COMMAND_DEF:
                  DEFW    KEYWORD
                  DEFW    SYNTAX
                  DEFW    DESCRIPTION
+                 DEFW    DESCRIPTION_LEN
                  DEFW    checkpoint_command
 
 KEYWORD:         DEFM    "CHECKPOINT"
-SYNTAX:          DEFM    "checkpoint", 0
-DESCRIPTION:     DEFM    "Store the current word list checkpoint.", 0
+SYNTAX:          DEFM    "CHECKPOINT"
+DESCRIPTION:     DEFM    "Store the current word list checkpoint."
+DESCRIPTION_LEN  .equ    $ - DESCRIPTION
     .endlocal
 
 ROLLBACK_COMMAND_DEF:
@@ -98,11 +111,13 @@ ROLLBACK_COMMAND_DEF:
                  DEFW    KEYWORD
                  DEFW    SYNTAX
                  DEFW    DESCRIPTION
+                 DEFW    DESCRIPTION_LEN
                  DEFW    rollback_command
 
 KEYWORD:         DEFM    "ROLLBACK"
-SYNTAX:          DEFM    "rollback", 0
-DESCRIPTION:     DEFM    "Rollback to the current checkpoint.", 0
+SYNTAX:          DEFM    "ROLLBACK"
+DESCRIPTION:     DEFM    "Rollback to the current checkpoint."
+DESCRIPTION_LEN  .equ    $ - DESCRIPTION
     .endlocal
 
 LOAD_COMMAND_DEF:
@@ -112,11 +127,13 @@ LOAD_COMMAND_DEF:
                  DEFW    KEYWORD
                  DEFW    SYNTAX
                  DEFW    DESCRIPTION
+                 DEFW    DESCRIPTION_LEN
                  DEFW    load_command
 
 KEYWORD:         DEFM    "LOAD"
-SYNTAX:          DEFM    "load <filename>", 0
-DESCRIPTION:     DEFM    "Load A word list from A file.", 0
+SYNTAX:          DEFM    "LOAD <filename>"
+DESCRIPTION:     DEFM    "Load A word list from A file."
+DESCRIPTION_LEN  .equ    $ - DESCRIPTION
     .endlocal
 
 SAVE_COMMAND_DEF:
@@ -126,11 +143,13 @@ SAVE_COMMAND_DEF:
                  DEFW    KEYWORD
                  DEFW    SYNTAX
                  DEFW    DESCRIPTION
+                 DEFW    DESCRIPTION_LEN
                  DEFW    save_command
 
 KEYWORD:         DEFM    "SAVE"
-SYNTAX:          DEFM    "save <filename>", 0
-DESCRIPTION:     DEFM    "Save the word list to A file.", 0
+SYNTAX:          DEFM    "SAVE <filename>"
+DESCRIPTION:     DEFM    "Save the word list to A file."
+DESCRIPTION_LEN  .equ    $ - DESCRIPTION
     .endlocal
 
 CLEAR_COMMAND_DEF:
@@ -140,11 +159,13 @@ CLEAR_COMMAND_DEF:
                  DEFW    KEYWORD
                  DEFW    SYNTAX
                  DEFW    DESCRIPTION
+                 DEFW    DESCRIPTION_LEN
                  DEFW    clear_command
 
 KEYWORD:         DEFM    "CLEAR"
-SYNTAX:          DEFM    "clear", 0
-DESCRIPTION:     DEFM    "Clear the word list.", 0
+SYNTAX:          DEFM    "CLEAR"
+DESCRIPTION:     DEFM    "Clear the word list."
+DESCRIPTION_LEN  .equ    $ - DESCRIPTION
     .endlocal
 
 QUIT_COMMAND_DEF:
@@ -154,11 +175,13 @@ QUIT_COMMAND_DEF:
                  DEFW    KEYWORD
                  DEFW    SYNTAX
                  DEFW    DESCRIPTION
+                 DEFW    DESCRIPTION_LEN
                  DEFW    quit_command                    ; method address
 
 KEYWORD:         DEFM    "QUIT"
-SYNTAX:          DEFM    "quit", 0
-DESCRIPTION:     DEFM    "Exit the program.", 0
+SYNTAX:          DEFM    "QUIT"
+DESCRIPTION:     DEFM    "Exit the program."
+DESCRIPTION_LEN  .equ    $ - DESCRIPTION
     .endlocal
 
 COMMAND_LIST_END DEFW    0

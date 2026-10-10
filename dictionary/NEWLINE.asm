@@ -1,20 +1,20 @@
 ;; ==========================================================
-;; Outputs the OK response
+;; Outputs a NEWLINE
 ;; IN:  -
 ;; OUT: -
 ;; MOD: DE, BC
 ;; ==========================================================
-OK
+NEWLINE
     .local
-    LD      DE, OK_PROMPT                   ; content
-    LD      BC, OK_PROMPT_LEN               ; length
+    LD      DE, NEWLINE                     ; content
+    LD      BC, NEWLINE_LEN                 ; length
     CALL    push_string
 
     CALL    DOT
 
     RET
 
-OK_PROMPT     DEFM    "ok", ASCII_LF
-OK_PROMPT_LEN .equ    $ - OK_PROMPT
+NEWLINE     DEFM    ASCII_LF
+NEWLINE_LEN .equ    $ - NEWLINE
     .endlocal
     
