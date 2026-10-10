@@ -13,17 +13,12 @@ main_prompt_parse_tokens:
 
     JR      Z, main_null_token
 
-    CALL    DOT
     JR      main_prompt_parse_tokens
-
-; LD      A, (CURRENT_INPUT)
-; OR      A
-; CALL    NZ, process_current_input
-
-    JR      main_prompt_input_echo_loop
 
 main_null_token:
     CALL    pop_stack
+    CALL    OK
+    JR      main_prompt_input_echo_loop
 
 main_done:
     RET
@@ -50,6 +45,7 @@ main_done:
     .include "dictionary/DOT.asm"
     .include "dictionary/HELP-PROMPT-TEXT.asm"
     .include "dictionary/INLINE.asm"
+    .include "dictionary/OK.asm"
     .include "dictionary/PRINT-GREETING.asm"
     .include "dictionary/PROMPT.asm"
     .include "dictionary/RESET-STACK.asm"
