@@ -5,45 +5,32 @@
 ;; MOD: A, DE, HL, IX
 ;; ==================================================================
 dump_command:
-    LD      DE, NOT_IMPLEMENTED_NL
-    JP      print
-
-    LD      HL, (CURRENT_INPUT_POS)         ; check that no further input was specified
-    LD      A, (HL)
-    OR      A
-    JR      Z, dump_command_execute
-
-dump_command_syntax_error:
-    LD      DE, SYNTAX_ERROR_NL
-    CALL    print
-
-    RET
-
-dump_command_execute:
     LD      IX, (WORD_LIST_HEAD)
 
 dump_command_loop:
-    LD      A, (IX + 0)                     ; load the length of the word
+    LD      A, (IX)                         ; load the length of the word
     OR      A                               ; if 0, then end of list reached
     JR      Z, dump_command_done
 
-    LD      E, (IX + 3)                     ; print out the word
-    LD      D, (IX + 4)
-    CALL    print
+    PUSH    IX                              ; save IX
 
-    LD      DE, NEW_LINE
-    CALL    print
+    LD      C, A                            ; length
+    LD      B, 0x00
+    LD      DE, (IX + 3)                    ; text
+    CALL    push_string
+
+    CALL    DOT
+
+    CALL    NEWLINE
 
 dump_command_next_command:
-    LD      E, (IX + 1)                     ; load the address of the next word and put it on the stack
-    LD      D, (IX + 2)
+    POP     IX                              ; restore IX
+
+    LD      DE, (IX + 1)                    ; load the address of the next word and put it on the stack
     PUSH    DE
     POP     IX                              ; next word
     JR      dump_command_loop
 
 dump_command_done:
-    LD      DE, INPUT_OK_NL
-    CALL    PRINT
-
     RET
     

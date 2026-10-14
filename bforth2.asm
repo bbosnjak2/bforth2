@@ -30,7 +30,6 @@ main_prompt_execute_command:
 
 main_null_token:
     CALL    pop_stack
-;;    CALL    OK
     JR      main_prompt_input_echo_loop
 
 main_done:
@@ -64,6 +63,7 @@ main_done:
     .include "dictionary/PROMPT.asm"
     .include "dictionary/RESET-STACK.asm"
     .include "dictionary/SEARCH.asm"
+    .include "dictionary/STACK-EMPTY.asm"
     .include "dictionary/START.asm"
     .include "dictionary/TOKEN.asm"
     .include "dictionary/WELCOME-TEXT.asm"
@@ -81,7 +81,6 @@ main_done:
     .include "stack/pop-stack.asm"
     .include "stack/stack-concatenate.asm"
 
-;; .include "command-processor/process-current-input.asm"
     .include "command-processor/commands/help-command.asm"
     .include "command-processor/commands/add-command.asm"
     .include "command-processor/commands/find-command.asm"
