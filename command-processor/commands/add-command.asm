@@ -9,11 +9,7 @@ add_command:
     OR      A
     RET     Z
 
-    LD      HL, (STACK_POINTER)
-    INC     HL
-    LD      BC, (HL)                        ; len
-    INC     HL
-    INC     HL                              ; word
+    CALL    pop_string                      ; BC = length, HL = text
 
 add_command_write_word_text:
     PUSH    HL                              ; source text
@@ -43,8 +39,6 @@ add_command_update_word_list_pointers:
     LD      (WORD_LIST_NEXT), DE            ; the next location is now where DE ended up
 
 add_command_done:
-    CALL    pop_stack
-
     CALL    OK
 
     RET

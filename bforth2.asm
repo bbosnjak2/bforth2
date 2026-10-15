@@ -79,6 +79,7 @@ main_done:
     .include "stack/data-types.asm"
     .include "stack/push-string.asm"
     .include "stack/pop-stack.asm"
+    .include "stack/pop-string.asm"
     .include "stack/stack-concatenate.asm"
 
     .include "command-processor/commands/help-command.asm"
